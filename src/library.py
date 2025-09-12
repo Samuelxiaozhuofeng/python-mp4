@@ -31,6 +31,8 @@ class LibraryEntry:
     time_offset_ms: int = 0
     exercises: Optional[List[Dict]] = None
     exercise_config: Optional[Dict] = None
+    resume_position_ms: int = 0
+    resume_exercise_index: int = 0
     created_at: float = 0.0
     updated_at: float = 0.0
 
@@ -79,6 +81,8 @@ class LibraryManager:
         time_offset_ms: int = 0,
         exercises: Optional[List[Dict]] = None,
         exercise_config: Optional[Dict] = None,
+        resume_position_ms: int = 0,
+        resume_exercise_index: int = 0,
     ) -> LibraryEntry:
         eid = self._make_id(video_path, subtitle_path)
         now = time.time()
@@ -97,6 +101,8 @@ class LibraryManager:
             "time_offset_ms": int(time_offset_ms or 0),
             "exercises": exercises or (found.get("exercises") if found else None),
             "exercise_config": exercise_config or (found.get("exercise_config") if found else None),
+            "resume_position_ms": int(resume_position_ms or (found.get("resume_position_ms") if found else 0)),
+            "resume_exercise_index": int(resume_exercise_index or (found.get("resume_exercise_index") if found else 0)),
             "created_at": found.get("created_at") if found else now,
             "updated_at": now,
         }
@@ -127,4 +133,3 @@ class LibraryManager:
             self._write()
             return True
         return False
-

@@ -7,7 +7,14 @@
       "time_offset_ms": 0,
       "exercises": [
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 3,
+              "answer": "entre",
+              "hint": "5 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 1,
           "end_time": 4420,
           "original_text": "¿Habrá mucha diferencia entre esta rebanada y las de a dólar que venden en muchos lados? Vamos a ver.",
@@ -18,10 +25,10 @@
         {
           "blanks": [
             {
-              "answer": "Bienvenidos",
-              "difficulty": "easy",
-              "hint": "形容词/问候语，首字母B",
-              "position": 0
+              "position": 3,
+              "answer": "una",
+              "hint": "3 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 2,
@@ -32,7 +39,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "answer": "vuelta",
+              "difficulty": "medium",
+              "hint": "名词，首字母v",
+              "position": 3
+            }
+          ],
           "current": 3,
           "end_time": 21680,
           "original_text": "Nos encontramos de vuelta por Nueva York.",
@@ -41,7 +55,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 6,
+              "answer": "ciudad",
+              "hint": "6 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 4,
           "end_time": 24920,
           "original_text": "Claro que sí, porque es una ciudad linda, me gusta aquí.",
@@ -50,7 +71,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "answer": "lugares",
+              "difficulty": "easy",
+              "hint": "名词，首字母l",
+              "position": 12
+            }
+          ],
           "current": 5,
           "end_time": 34080,
           "original_text": "Y haremos uno de los ya clásicos en el canal, videos de lugares con largas filas de hasta horas de duración para obtener un solo platillo.",
@@ -61,10 +89,10 @@
         {
           "blanks": [
             {
-              "answer": "turistas",
-              "difficulty": "easy",
-              "hint": "名词，首字母t",
-              "position": 8
+              "position": 4,
+              "answer": "serán",
+              "hint": "5 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 6,
@@ -75,7 +103,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "answer": "turno",
+              "difficulty": "easy",
+              "hint": "名词，首字母t",
+              "position": 3
+            }
+          ],
           "current": 7,
           "end_time": 41970,
           "original_text": "Hoy es el turno de Joe's Pizza, claro que sí, este local que está a mis espaldas.",
@@ -84,7 +119,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 17,
+              "answer": "mucho",
+              "hint": "5 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 8,
           "end_time": 52020,
           "original_text": "Sitio que durante décadas se ha ganado una fama especial por tener una gran pizza. Se comenta mucho sobre su masa que es como crujientita, quemadita.",
@@ -93,7 +135,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "answer": "neoyorquinos",
+              "difficulty": "hard",
+              "hint": "名词，首字母n",
+              "position": 2
+            }
+          ],
           "current": 9,
           "end_time": 55140,
           "original_text": "Entre los neoyorquinos, pero sobre todo entre los turistas.",
@@ -102,7 +151,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "answer": "apariciones",
+              "difficulty": "medium",
+              "hint": "名词，首字母a",
+              "position": 2
+            }
+          ],
           "current": 10,
           "end_time": 58260,
           "original_text": "Por sus apariciones en cosas famosas.",
@@ -127,7 +183,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 2,
+              "answer": "manera",
+              "hint": "6 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 12,
           "end_time": 70020,
           "original_text": "De igual manera tiene apariciones especiales en películas clásicas de Spider-Man, de esas de por ahí de los 2000.",
@@ -138,10 +201,10 @@
         {
           "blanks": [
             {
-              "answer": "Parker",
-              "difficulty": "easy",
-              "hint": "名词，首字母P",
-              "position": 2
+              "position": 10,
+              "answer": "bla",
+              "hint": "3 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 13,
@@ -152,7 +215,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "answer": "letrero",
+              "difficulty": "medium",
+              "hint": "名词，首字母l",
+              "position": 4
+            }
+          ],
           "current": 14,
           "end_time": 79200,
           "original_text": "De hecho tienen un letrero adentro que dice así como de \"Como la viste en Spider-Man, Joe's Pizza\".",
@@ -161,7 +231,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 0,
+              "answer": "Eso",
+              "hint": "3 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 15,
           "end_time": 84030,
           "original_text": "Eso combinado con otros factores ha hecho que de verdad se haga muy pero muy famosa.",
@@ -170,7 +247,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 24,
+              "answer": "una",
+              "hint": "3 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 16,
           "end_time": 91440,
           "original_text": "Si tú buscas en Google \"mejor pizza de Nueva York\" o \"pizza más famosa de Nueva York\", sí o sí te va a salir una recomendación de este sitio.",
@@ -179,7 +263,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 9,
+              "answer": "por",
+              "hint": "3 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 17,
           "end_time": 96210,
           "original_text": "Que fue fundado en la década de los 70s por un inmigrante de Nápoles, Italia.",
@@ -188,7 +279,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 25,
+              "answer": "tres",
+              "hint": "4 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 18,
           "end_time": 105510,
           "original_text": "Hoy en día es tan exitoso que ya tiene varias sucursales en la ciudad de Nueva York e incluso leí en internet que ya tienen tres sucursales en China.",
@@ -199,16 +297,10 @@
         {
           "blanks": [
             {
-              "answer": "locura",
+              "answer": "bárbaro",
               "difficulty": "medium",
-              "hint": "名词，首字母l",
-              "position": 3
-            },
-            {
-              "answer": "filas",
-              "difficulty": "medium",
-              "hint": "名词，首字母f",
-              "position": 8
+              "hint": "形容词，首字母b",
+              "position": 1
             }
           ],
           "current": 19,
@@ -219,7 +311,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 3,
+              "answer": "nos",
+              "hint": "3 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 20,
           "end_time": 114210,
           "original_text": "Ahorita justo como nos lo encontramos, ustedes dirán, \"Luisillo, se ve más o menos\".",
@@ -228,7 +327,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 0,
+              "answer": "Pero",
+              "hint": "4 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 21,
           "end_time": 117210,
           "original_text": "Pero les cuento que son las 10:30 de la mañana.",
@@ -237,7 +343,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "answer": "flujo",
+              "difficulty": "medium",
+              "hint": "名词，首字母f",
+              "position": 2
+            }
+          ],
           "current": 22,
           "end_time": 119010,
           "original_text": "Vean el flujo que hay.",
@@ -246,7 +359,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "answer": "tempranito",
+              "difficulty": "medium",
+              "hint": "形容词，首字母t",
+              "position": 10
+            }
+          ],
           "current": 23,
           "end_time": 127020,
           "original_text": "Mucha gente con tal de ahorrarse las filas largas vienen tempranito por su pizza para no perderse la oportunidad durante su viaje neoyorquino.",
@@ -255,7 +375,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 22,
+              "answer": "recetas",
+              "hint": "7 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 24,
           "end_time": 133500,
           "original_text": "Pues venga, eh, no se diga más, vamos a entrar, vamos a dar un vistazo, vamos a probar algunas de sus mejores recetas. Vamos a darle.",
@@ -264,7 +391,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "answer": "movimiento",
+              "difficulty": "medium",
+              "hint": "名词，首字母m",
+              "position": 3
+            }
+          ],
           "current": 25,
           "end_time": 142340,
           "original_text": "Oigan, pues vaya movimiento, sí es un sitio activo.",
@@ -273,7 +407,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 3,
+              "answer": "fila",
+              "hint": "4 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 26,
           "end_time": 146060,
           "original_text": "Ahorita ya la fila se acumuló y sí llega hasta afuera.",
@@ -284,10 +425,10 @@
         {
           "blanks": [
             {
-              "answer": "cocina",
-              "difficulty": "easy",
-              "hint": "名词，首字母c",
-              "position": 9
+              "position": 1,
+              "answer": "platicando",
+              "hint": "10 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 27,
@@ -298,7 +439,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 2,
+              "answer": "ver",
+              "hint": "3 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 28,
           "end_time": 158000,
           "original_text": "Y a ver, el sitio en sí, al menos esta sucursal, no es grande.",
@@ -307,7 +455,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 10,
+              "answer": "sentaditas",
+              "hint": "10 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 29,
           "end_time": 163280,
           "original_text": "Cabrán tal vez unas 20 personas cómodamente aquí, comiendo y sentaditas me refiero.",
@@ -318,10 +473,10 @@
         {
           "blanks": [
             {
-              "answer": "sillas",
-              "difficulty": "easy",
-              "hint": "名词，首字母s",
-              "position": 6
+              "position": 16,
+              "answer": "lugar",
+              "hint": "5 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 30,
@@ -338,6 +493,12 @@
               "difficulty": "medium",
               "hint": "名词，首字母r",
               "position": 1
+            },
+            {
+              "answer": "pocas",
+              "difficulty": "medium",
+              "hint": "形容词，首字母p",
+              "position": 5
             }
           ],
           "current": 31,
@@ -348,7 +509,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 1,
+              "answer": "pedí",
+              "hint": "4 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 32,
           "end_time": 178580,
           "original_text": "Me pedí las tres más famosas, que ya las tengo aquí, ahorita se las voy a enseñar.",
@@ -359,10 +527,10 @@
         {
           "blanks": [
             {
-              "answer": "de",
-              "difficulty": "easy",
-              "hint": "介词，首字母d",
-              "position": 1
+              "position": 5,
+              "answer": "dólares",
+              "hint": "7 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 33,
@@ -373,7 +541,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 9,
+              "answer": "que",
+              "hint": "3 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 34,
           "end_time": 187940,
           "original_text": "En las paredes hay fotos de mucha gente conocida que ha venido aquí, muchos artículos famosos.",
@@ -384,16 +559,16 @@
         {
           "blanks": [
             {
-              "answer": "tenido",
+              "answer": "apariciones",
               "difficulty": "medium",
-              "hint": "动词，首字母t",
-              "position": 2
+              "hint": "名词，首字母a",
+              "position": 3
             },
             {
-              "answer": "músicos",
-              "difficulty": "easy",
-              "hint": "名词，首字母m",
-              "position": 13
+              "answer": "programa",
+              "difficulty": "medium",
+              "hint": "名词，首字母p",
+              "position": 8
             }
           ],
           "current": 35,
@@ -412,10 +587,10 @@
               "position": 2
             },
             {
-              "answer": "Auto",
-              "difficulty": "easy",
-              "hint": "名词，首字母A",
-              "position": 8
+              "answer": "Spider-Man",
+              "difficulty": "medium",
+              "hint": "名词，首字母S",
+              "position": 4
             }
           ],
           "current": 36,
@@ -428,10 +603,10 @@
         {
           "blanks": [
             {
-              "answer": "dueño",
-              "difficulty": "medium",
-              "hint": "名词，首字母d",
-              "position": 4
+              "position": 7,
+              "answer": "parece",
+              "hint": "6 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 37,
@@ -444,10 +619,10 @@
         {
           "blanks": [
             {
-              "answer": "películas",
-              "difficulty": "medium",
-              "hint": "名词，首字母p",
-              "position": 7
+              "position": 11,
+              "answer": "ser",
+              "hint": "3 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 38,
@@ -460,10 +635,10 @@
         {
           "blanks": [
             {
-              "answer": "frasquitos",
-              "difficulty": "medium",
-              "hint": "名词，首字母f",
-              "position": 17
+              "position": 21,
+              "answer": "pone",
+              "hint": "4 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 39,
@@ -474,7 +649,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 9,
+              "answer": "primeros",
+              "hint": "8 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 40,
           "end_time": 218000,
           "original_text": "Ahora, me están contando que este fue de los primeros lugares que vendió pizza por rebanada.",
@@ -483,7 +665,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 39,
+              "answer": "sean",
+              "hint": "4 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 41,
           "end_time": 227510,
           "original_text": "Y que a raíz de este concepto, pues se hizo toda una fiebre que es muy común de ver en Nueva York, que hay sitios que te venden la rebanada en un dólar, dólar 50, pero tal vez no sean de la misma calidad.",
@@ -492,7 +681,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 14,
+              "answer": "hacemos",
+              "hint": "7 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 42,
           "end_time": 233870,
           "original_text": "Oigan, no me memen, nos hemos tardado, qué sé yo, media hora entre que hacemos b-roll y saludamos a la gente y bla.",
@@ -501,7 +697,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 8,
+              "answer": "fila",
+              "hint": "4 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 43,
           "end_time": 236000,
           "original_text": "Y no, vean, ahora sí ya se hizo fila.",
@@ -512,10 +715,10 @@
         {
           "blanks": [
             {
-              "answer": "normal",
-              "difficulty": "easy",
-              "hint": "形容词，首字母n",
-              "position": 5
+              "position": 15,
+              "answer": "allá",
+              "hint": "4 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 44,
@@ -526,7 +729,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 1,
+              "answer": "venga",
+              "hint": "5 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 45,
           "end_time": 243110,
           "original_text": "Eh, venga, a ver qué tal. Me gasté como 20 dólares en pizza.",
@@ -537,10 +747,10 @@
         {
           "blanks": [
             {
-              "answer": "durísimo",
-              "difficulty": "medium",
-              "hint": "形容词，首字母d",
-              "position": 5
+              "position": 2,
+              "answer": "sol",
+              "hint": "3 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 46,
@@ -551,7 +761,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 1,
+              "answer": "alcanza",
+              "hint": "7 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 47,
           "end_time": 248840,
           "original_text": "¿Se alcanza a ver lo sudado que estoy? ¿Sí se ve?",
@@ -560,7 +777,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 2,
+              "answer": "horno",
+              "hint": "5 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 48,
           "end_time": 251000,
           "original_text": "Es un horno esto, eh.",
@@ -569,7 +793,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 2,
+              "answer": "nos",
+              "hint": "3 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 49,
           "end_time": 256970,
           "original_text": "Porque sí nos metimos en la zonita esta para, pues vaya, que que te ponen para refugiarte del sol, pero no, no, es que el clima ahorita sí está recio.",
@@ -578,7 +809,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 7,
+              "answer": "pizza",
+              "hint": "5 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 50,
           "end_time": 262220,
           "original_text": "Uf. Mira, la ventaja es que tu pizza no se va a enfriar. Es un horno la ciudad.",
@@ -587,7 +825,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 24,
+              "answer": "venden",
+              "hint": "6 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 51,
           "end_time": 270320,
           "original_text": "Pues venga, eh, me he pedido tres rebanadas de las que me decían aquí mis carnales de la cocina, son las que más se venden, las más famosas.",
@@ -598,10 +843,10 @@
         {
           "blanks": [
             {
-              "answer": "pedido",
-              "difficulty": "medium",
-              "hint": "动词（过去分词），首字母p",
-              "position": 2
+              "position": 6,
+              "answer": "que",
+              "hint": "3 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 52,
@@ -612,7 +857,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 3,
+              "answer": "supuesto",
+              "hint": "8 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 53,
           "end_time": 283010,
           "original_text": "Me pedí, por supuesto, la clásica de pepperoni, no puede faltar.",
@@ -621,7 +873,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 4,
+              "answer": "chicos",
+              "hint": "6 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 54,
           "end_time": 288230,
           "original_text": "Y me decían los chicos de la cocina que una de las que más se venden es la de espinaca con queso.",
@@ -630,7 +889,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 10,
+              "answer": "antojosa",
+              "hint": "8 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 55,
           "end_time": 294230,
           "original_text": "Miren, no sé, a mí no se me hace tan antojosa esa, la verdad, como que no me abre tanto el apetito, pero podría estar equivocado.",
@@ -639,7 +905,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 5,
+              "answer": "entre",
+              "hint": "5 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 56,
           "end_time": 297440,
           "original_text": "Todas estas rondaron los precios entre 4 y 6 dólares.",
@@ -648,7 +921,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 5,
+              "answer": "diga",
+              "hint": "4 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 57,
           "end_time": 300300,
           "original_text": "Eh, pues venga, no se diga más, comencemos.",
@@ -657,7 +937,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 14,
+              "answer": "clásica",
+              "hint": "7 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 58,
           "end_time": 303920,
           "original_text": "Híjole. Miren, vamos a empezar de una con la de pepperoni, que es la clásica.",
@@ -666,7 +953,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 3,
+              "answer": "digo",
+              "hint": "4 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 59,
           "end_time": 312980,
           "original_text": "Se dice, les digo, que la clave de este sitio es la masa delgada, crunchy, ¿okay? Que tienen como una receta acá muy muy top.",
@@ -675,7 +969,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 12,
+              "answer": "vueltas",
+              "hint": "7 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 60,
           "end_time": 317540,
           "original_text": "Y sí vimos cómo los chicos de la cocina, pero le dan vueltas pero duro.",
@@ -684,7 +985,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 1,
+              "answer": "ese",
+              "hint": "3 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 61,
           "end_time": 320180,
           "original_text": "Entonces, ese talento hay que reconocerlo.",
@@ -693,7 +1001,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 1,
+              "answer": "venga",
+              "hint": "5 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 62,
           "end_time": 323120,
           "original_text": "Y venga, no se diga más, provechito, provechito.",
@@ -702,7 +1017,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 18,
+              "answer": "cierto",
+              "hint": "6 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 63,
           "end_time": 330020,
           "original_text": "¿Habrá mucha diferencia entre esta rebanada y las de a dólar que venden en muchos lados, que por cierto ya hemos probado anteriormente en el canal?",
@@ -711,7 +1033,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 0,
+              "answer": "Vamos",
+              "hint": "5 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 64,
           "end_time": 331040,
           "original_text": "Vamos a ver.",
@@ -720,7 +1049,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 7,
+              "answer": "masa",
+              "hint": "4 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 65,
           "end_time": 338030,
           "original_text": "Mmm. Okay, diré de entrada que la masa es una reverenda delicia.",
@@ -745,7 +1081,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 20,
+              "answer": "más",
+              "hint": "3 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 67,
           "end_time": 346430,
           "original_text": "Ahora, en comparación, por ejemplo, con las de un dólar, sí esta se siente como más tomatosa, más quesosa y más carnosa.",
@@ -756,10 +1099,10 @@
         {
           "blanks": [
             {
-              "answer": "Sí",
-              "difficulty": "easy",
-              "hint": "高频词，首字母S",
-              "position": 0
+              "position": 16,
+              "answer": "catsup",
+              "hint": "6 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 68,
@@ -772,16 +1115,10 @@
         {
           "blanks": [
             {
-              "answer": "masa",
+              "answer": "Pura",
               "difficulty": "medium",
-              "hint": "名词，首字母m",
-              "position": 1
-            },
-            {
-              "answer": "quesos",
-              "difficulty": "medium",
-              "hint": "名词，首字母q",
-              "position": 4
+              "hint": "形容词，首字母p",
+              "position": 0
             }
           ],
           "current": 69,
@@ -792,7 +1129,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "answer": "rica",
+              "difficulty": "easy",
+              "hint": "形容词，首字母r",
+              "position": 2
+            }
+          ],
           "current": 70,
           "end_time": 359240,
           "original_text": "Okay, muy rica esta de pepperoni, una receta bastante segura.",
@@ -801,7 +1145,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 0,
+              "answer": "4.5",
+              "hint": "3 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 71,
           "end_time": 362300,
           "original_text": "4.5 de 5, solamente por ser exigente.",
@@ -810,7 +1161,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 0,
+              "answer": "Segunda",
+              "hint": "7 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 72,
           "end_time": 366080,
           "original_text": "Segunda rebanada por 6 dólares, la suprema.",
@@ -819,7 +1177,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 7,
+              "answer": "que",
+              "hint": "3 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 73,
           "end_time": 369560,
           "original_text": "Sí que se ve suprema, ¿okay? Sí que tiene bastantes ingredientes.",
@@ -828,7 +1193,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 8,
+              "answer": "completa",
+              "hint": "8 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 74,
           "end_time": 375020,
           "original_text": "Mmm. Sí se siente suprema, sí se siente completa.",
@@ -837,7 +1209,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 4,
+              "answer": "que",
+              "hint": "3 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 75,
           "end_time": 378620,
           "original_text": "Y la verdad siento que si no vienes con tanta hambre, con dos de estas te llenas.",
@@ -846,7 +1225,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "answer": "rica",
+              "difficulty": "easy",
+              "hint": "形容词，首字母r",
+              "position": 1
+            }
+          ],
           "current": 76,
           "end_time": 380060,
           "original_text": "Muy rica, ¿eh?",
@@ -855,7 +1241,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 6,
+              "answer": "ahí",
+              "hint": "3 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 77,
           "end_time": 383180,
           "original_text": "Me gusta el quemadito de atrás, ahí se alcanza a percibir perfectamente.",
@@ -864,7 +1257,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 12,
+              "answer": "leña",
+              "hint": "4 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 78,
           "end_time": 388280,
           "original_text": "Ese quemadito en efecto le da un un gusto sabroso, como a leña, como a carbón, como que el horno ahí",
@@ -873,7 +1273,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 4,
+              "answer": "sabe",
+              "hint": "4 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 79,
           "end_time": 393200,
           "original_text": "me sabe, ¿okay? Me sabe a horno de más de 40 años en uso. Qué delicia.",
@@ -882,7 +1289,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 7,
+              "answer": "exigente",
+              "hint": "8 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 80,
           "end_time": 397940,
           "original_text": "Igual, 4.5 de 5, meramente por ser exigente. Está putrideliciosa.",
@@ -891,7 +1305,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 5,
+              "answer": "verdad",
+              "hint": "6 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 81,
           "end_time": 404030,
           "original_text": "Y ahora, esta que la verdad no se ve nada antojable, al menos para mí. Ustedes comenten si si se les antoja.",
@@ -900,7 +1321,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 4,
+              "answer": "espinaca",
+              "hint": "8 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 82,
           "end_time": 406070,
           "original_text": "Es una pizza de espinaca.",
@@ -909,7 +1337,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 13,
+              "answer": "una",
+              "hint": "3 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 83,
           "end_time": 411050,
           "original_text": "Es que no sé, para mí una pizza de espinaca es un es una contradicción, es una ironía.",
@@ -920,10 +1355,10 @@
         {
           "blanks": [
             {
-              "answer": "pizza",
-              "difficulty": "easy",
-              "hint": "名词，首字母p",
-              "position": 1
+              "position": 5,
+              "answer": "suena",
+              "hint": "5 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 84,
@@ -934,7 +1369,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 4,
+              "answer": "como",
+              "hint": "4 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 85,
           "end_time": 423350,
           "original_text": "Y en esto es como de espinaca, ¿no? Una mezcla interesante de de emociones, sentimientos encontrados.",
@@ -945,10 +1387,10 @@
         {
           "blanks": [
             {
-              "answer": "probemos",
+              "answer": "provechito",
               "difficulty": "medium",
-              "hint": "动词，首字母p",
-              "position": 1
+              "hint": "名词，首字母P",
+              "position": 3
             }
           ],
           "current": 86,
@@ -981,7 +1423,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 13,
+              "answer": "mira",
+              "hint": "4 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 88,
           "end_time": 435230,
           "original_text": "No, pues sí. Repito, no es mi no es mi asunto, ¿eh? Y mira que sí me echo una buena espinaca.",
@@ -990,7 +1439,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 13,
+              "answer": "esta",
+              "hint": "4 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 89,
           "end_time": 439250,
           "original_text": "Está okay, supongo, si eres un conejo. Así, si eres un conejo, pide esta pizza.",
@@ -1001,10 +1457,10 @@
         {
           "blanks": [
             {
-              "answer": "musculoso",
-              "difficulty": "medium",
-              "hint": "形容词，首字母m",
-              "position": 6
+              "position": 7,
+              "answer": "Popeye",
+              "hint": "6 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 90,
@@ -1015,7 +1471,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "answer": "neta",
+              "difficulty": "medium",
+              "hint": "名词，首字母n",
+              "position": 3
+            }
+          ],
           "current": 91,
           "end_time": 447830,
           "original_text": "Si no, la neta nel, eh, no sé por qué es de las más vendidas. Personalmente, dos de cinco.",
@@ -1024,7 +1487,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 3,
+              "answer": "valiosa",
+              "hint": "7 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 92,
           "end_time": 451850,
           "original_text": "Oigan, ahora, observación valiosa, no hay baño en el sitio, ¿eh?",
@@ -1033,7 +1503,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 14,
+              "answer": "para",
+              "hint": "4 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 93,
           "end_time": 458180,
           "original_text": "Ahorita yo quería ir y sí, no, de plano no hay. Es un sitio para que vengas por tu pizza, te la eches aquí o de plano te la lleves.",
@@ -1042,7 +1519,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 18,
+              "answer": "que",
+              "hint": "3 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 94,
           "end_time": 464120,
           "original_text": "Que sepas que aquí no vas a poder desahogarte, vas a tener que buscar otro baño por aquí, que en Nueva York son bien escasos.",
@@ -1069,16 +1553,10 @@
         {
           "blanks": [
             {
-              "answer": "vejiga",
-              "difficulty": "medium",
-              "hint": "名词，首字母v",
-              "position": 3
-            },
-            {
-              "answer": "tripa",
-              "difficulty": "medium",
-              "hint": "名词，首字母t",
-              "position": 7
+              "position": 0,
+              "answer": "Vente",
+              "hint": "5 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 96,
@@ -1091,10 +1569,10 @@
         {
           "blanks": [
             {
-              "answer": "pizza",
-              "difficulty": "easy",
-              "hint": "名词，首字母p",
-              "position": 11
+              "position": 14,
+              "answer": "pareció",
+              "hint": "7 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 97,
@@ -1108,13 +1586,13 @@
           "blanks": [
             {
               "answer": "Magnífica",
-              "difficulty": "easy",
+              "difficulty": "medium",
               "hint": "形容词，首字母M",
               "position": 0
             },
             {
               "answer": "perfecta",
-              "difficulty": "easy",
+              "difficulty": "medium",
               "hint": "形容词，首字母p",
               "position": 1
             }
@@ -1129,10 +1607,10 @@
         {
           "blanks": [
             {
-              "answer": "espera",
-              "difficulty": "easy",
-              "hint": "名词，首字母e",
-              "position": 9
+              "position": 0,
+              "answer": "Crees",
+              "hint": "5 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 99,
@@ -1143,7 +1621,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "answer": "creo",
+              "difficulty": "easy",
+              "hint": "动词，首字母c",
+              "position": 1
+            }
+          ],
           "current": 100,
           "end_time": 479300,
           "original_text": "Yo creo que sí. Está muy buena la pizza.",
@@ -1170,16 +1655,10 @@
         {
           "blanks": [
             {
-              "answer": "También",
-              "difficulty": "easy",
-              "hint": "副词，首字母T",
-              "position": 0
-            },
-            {
+              "position": 4,
               "answer": "quejar",
-              "difficulty": "medium",
-              "hint": "动词，首字母q",
-              "position": 4
+              "hint": "6 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 102,
@@ -1192,10 +1671,10 @@
         {
           "blanks": [
             {
+              "position": 1,
               "answer": "querida",
-              "difficulty": "medium",
-              "hint": "形容词，首字母q",
-              "position": 1
+              "hint": "7 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 103,
@@ -1207,12 +1686,6 @@
         },
         {
           "blanks": [
-            {
-              "answer": "Exactamente",
-              "difficulty": "easy",
-              "hint": "副词，首字母E",
-              "position": 0
-            },
             {
               "answer": "Costa",
               "difficulty": "easy",
@@ -1228,7 +1701,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 1,
+              "answer": "qué",
+              "hint": "3 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 105,
           "end_time": 488000,
           "original_text": "Escuchen qué bonito dice su su nombre. A ver, ¿cómo te llamas?",
@@ -1243,12 +1723,6 @@
               "difficulty": "easy",
               "hint": "名词，首字母K",
               "position": 0
-            },
-            {
-              "answer": "Montiel",
-              "difficulty": "medium",
-              "hint": "名词，首字母M",
-              "position": 1
             }
           ],
           "current": 106,
@@ -1259,7 +1733,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 4,
+              "answer": "pizza",
+              "hint": "5 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 107,
           "end_time": 494000,
           "original_text": "¿Cómo sentiste la la pizza? ¿Valió la pena la espera? ¿Te decepcionaste? Cuéntame.",
@@ -1268,7 +1749,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 9,
+              "answer": "vale",
+              "hint": "4 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 108,
           "end_time": 500300,
           "original_text": "Claro, es una pizza superdeliciosa y la verdad que vale la pena hacer la fila que hay que hacer para poder comerla.",
@@ -1279,10 +1767,10 @@
         {
           "blanks": [
             {
-              "answer": "apetitosa",
-              "difficulty": "medium",
-              "hint": "形容词，首字母a",
-              "position": 2
+              "position": 9,
+              "answer": "que",
+              "hint": "3 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 109,
@@ -1295,10 +1783,10 @@
         {
           "blanks": [
             {
-              "answer": "Luisillo",
-              "difficulty": "medium",
-              "hint": "名词，首字母L",
-              "position": 10
+              "position": 7,
+              "answer": "edición",
+              "hint": "7 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 110,
@@ -1309,7 +1797,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 20,
+              "answer": "rica",
+              "hint": "4 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 111,
           "end_time": 528500,
           "original_text": "¿Cómo la vieron? Personalmente le voy a dar su 4 de 5, meramente por ser quisquilloso, pero sinceramente está muy rica, está muy buena.",
@@ -1320,10 +1815,10 @@
         {
           "blanks": [
             {
-              "answer": "vieron",
-              "difficulty": "medium",
-              "hint": "动词，首字母v",
-              "position": 3
+              "position": 14,
+              "answer": "como",
+              "hint": "4 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 112,
@@ -1336,10 +1831,10 @@
         {
           "blanks": [
             {
-              "answer": "corriendo",
-              "difficulty": "medium",
-              "hint": "动词，首字母c",
-              "position": 3
+              "position": 2,
+              "answer": "voy",
+              "hint": "3 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 113,
@@ -1350,7 +1845,14 @@
           "total": 115
         },
         {
-          "blanks": [],
+          "blanks": [
+            {
+              "position": 5,
+              "answer": "para",
+              "hint": "4 letters",
+              "difficulty": "medium"
+            }
+          ],
           "current": 114,
           "end_time": 544100,
           "original_text": "Gracias por haberme acompañado. Suscríbanse para no perderse las futuras aventuras de Luisillo el Gordillo.",
@@ -1361,10 +1863,10 @@
         {
           "blanks": [
             {
-              "answer": "Disfruten",
-              "difficulty": "easy",
-              "hint": "动词，首字母D",
-              "position": 2
+              "position": 1,
+              "answer": "adiós",
+              "hint": "5 letters",
+              "difficulty": "medium"
             }
           ],
           "current": 115,
@@ -1375,9 +1877,21 @@
           "total": 115
         }
       ],
-      "exercise_config": null,
-      "created_at": 1757654144.28868,
-      "updated_at": 1757654151.8589215
+      "exercise_config": {
+        "level": "B1-B2",
+        "focus_areas": [
+          "名词",
+          "动词",
+          "形容词",
+          "高频词"
+        ],
+        "blank_density": 50,
+        "language": "Spanish"
+      },
+      "resume_position_ms": 24938,
+      "resume_exercise_index": 3,
+      "created_at": 1757666122.6350372,
+      "updated_at": 1757666122.6350372
     }
   ]
 }

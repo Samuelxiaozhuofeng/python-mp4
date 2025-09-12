@@ -349,6 +349,27 @@ class MainWindow(QMainWindow):
         
         # 保存字幕解析器引用
         self.subtitle_parser = subtitle_parser
+
+        # 如果库中已保存过该视频+字幕的AI练习，则自动加载，避免重复生成
+        try:
+            from library import LibraryManager
+            if getattr(self, 'library', None) is None:
+                self.library = LibraryManager()
+            video_path = getattr(self.video_widget, 'current_video_file', None)
+            sub_path = getattr(self.subtitle_parser, 'current_file', None)
+            if video_path and sub_path:
+                import os
+                vabs = os.path.abspath(video_path)
+                sabs = os.path.abspath(sub_path)
+                for e in self.library.get_entries():
+                    if os.path.abspath(e.video_path) == vabs and os.path.abspath(e.subtitle_path) == sabs:
+                        if e.exercises:
+                            self.generated_exercises = e.exercises
+                            self.status_bar.showMessage("已从收藏加载AI练习，无需重新生成")
+                        break
+        except Exception:
+            # 忽略加载失败，保持正常流程
+            pass
         
         # 在练习组件中显示字幕加载成功的提示
         print("[DEBUG] 准备调用 show_subtitle_loaded_state")
