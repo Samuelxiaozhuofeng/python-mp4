@@ -1,0 +1,19 @@
+1
+00:00:01,000 --> 00:00:05,000
+Hello, welcome to ListenFill AI!
+
+2
+00:00:06,000 --> 00:00:10,000
+This is a sample subtitle for testing.
+
+3
+00:00:11,000 --> 00:00:15,000
+You can use this file to test the subtitle import feature.
+
+4
+00:00:16,000 --> 00:00:20,000
+The application supports time synchronization adjustment.
+
+5
+00:00:21,000 --> 00:00:25,000
+Enjoy learning with personalized video exercises!
