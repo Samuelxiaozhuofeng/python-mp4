@@ -1,6 +1,6 @@
 """
-字幕导入对话框
-处理字幕文件的导入、预览和时间同步调整
+Subtitle import dialog
+Handles subtitle file import, preview and time synchronization adjustment
 """
 import os
 from pathlib import Path
@@ -15,7 +15,7 @@ from PySide6.QtGui import QFont
 from subtitle_parser import SubtitleParser, SubtitleItem
 
 class SubtitlePreviewWidget(QFrame):
-    """字幕预览组件"""
+    """Subtitle preview component"""
     
     def __init__(self):
         super().__init__()
@@ -25,25 +25,25 @@ class SubtitlePreviewWidget(QFrame):
         self.setup_ui()
     
     def setup_ui(self):
-        """设置UI"""
+        """Setup UI"""
         self.setFrameStyle(QFrame.StyledPanel)
         layout = QVBoxLayout(self)
         
-        # 标题
-        title_label = QLabel("字幕预览")
+        # Title
+        title_label = QLabel("Subtitle Preview")
         title_label.setStyleSheet("font-weight: bold; font-size: 14px;")
         layout.addWidget(title_label)
         
-        # 字幕列表
+        # Subtitle list
         self.subtitle_list = QListWidget()
         self.subtitle_list.setMaximumHeight(200)
         layout.addWidget(self.subtitle_list)
         
-        # 当前字幕显示
-        current_group = QGroupBox("当前字幕")
+        # Current subtitle display
+        current_group = QGroupBox("Current Subtitle")
         current_layout = QVBoxLayout(current_group)
         
-        self.current_subtitle_label = QLabel("无字幕")
+        self.current_subtitle_label = QLabel("No subtitle")
         self.current_subtitle_label.setWordWrap(True)
         self.current_subtitle_label.setStyleSheet("""
             QLabel {
@@ -59,12 +59,12 @@ class SubtitlePreviewWidget(QFrame):
         layout.addWidget(current_group)
     
     def load_subtitles(self, subtitles):
-        """加载字幕数据"""
+        """Load subtitle data"""
         self.subtitles = subtitles
         self.update_subtitle_list()
     
     def update_subtitle_list(self):
-        """更新字幕列表"""
+        """Update subtitle list"""
         self.subtitle_list.clear()
         
         for subtitle in self.subtitles[:50]:  # 只显示前50条
@@ -76,23 +76,23 @@ class SubtitlePreviewWidget(QFrame):
             self.subtitle_list.addItem(item)
         
         if len(self.subtitles) > 50:
-            item = QListWidgetItem(f"... 还有 {len(self.subtitles) - 50} 条字幕")
+            item = QListWidgetItem(f"... {len(self.subtitles) - 50} more subtitles")
             item.setForeground(Qt.gray)
             self.subtitle_list.addItem(item)
     
     def set_time_offset(self, offset_ms):
-        """设置时间偏移"""
+        """Set time offset"""
         self.time_offset = offset_ms
         self.update_subtitle_list()
         self.update_current_subtitle()
     
     def set_current_time(self, time_ms):
-        """设置当前时间并更新显示"""
+        """Set current time and update display"""
         self.current_time = time_ms
         self.update_current_subtitle()
     
     def update_current_subtitle(self):
-        """更新当前字幕显示"""
+        """Update current subtitle display"""
         adjusted_time = self.current_time - self.time_offset
         current_subtitle = None
         
@@ -117,7 +117,7 @@ class SubtitlePreviewWidget(QFrame):
                 }
             """)
         else:
-            self.current_subtitle_label.setText("当前时间无字幕")
+            self.current_subtitle_label.setText("No subtitle at current time")
             self.current_subtitle_label.setStyleSheet("""
                 QLabel {
                     background-color: #f8f9fa;
@@ -130,7 +130,7 @@ class SubtitlePreviewWidget(QFrame):
             """)
     
     def _ms_to_time_string(self, ms):
-        """毫秒转时间字符串"""
+        """Convert milliseconds to time string"""
         seconds = ms // 1000
         minutes = seconds // 60
         hours = minutes // 60
@@ -138,10 +138,10 @@ class SubtitlePreviewWidget(QFrame):
         return f"{hours:02d}:{minutes%60:02d}:{seconds%60:02d}"
 
 class SubtitleImportDialog(QDialog):
-    """字幕导入对话框"""
+    """Subtitle import dialog"""
     
-    # 定义信号
-    subtitle_loaded = Signal(object)  # 字幕解析器对象
+    # Define signals
+    subtitle_loaded = Signal(object)  # Subtitle parser object
     
     def __init__(self, parent=None, video_duration_ms=0):
         super().__init__(parent)
@@ -153,36 +153,36 @@ class SubtitleImportDialog(QDialog):
     
     def setup_ui(self):
         """设置用户界面"""
-        self.setWindowTitle("导入字幕文件")
+        self.setWindowTitle("Import Subtitle File")
         self.setMinimumSize(800, 600)
         self.setModal(True)
         
         layout = QVBoxLayout(self)
         
-        # 创建分割器
+        # Create splitter
         splitter = QSplitter(Qt.Horizontal)
         layout.addWidget(splitter)
         
-        # 左侧：文件导入和时间调整
+        # Left side: file import and time adjustment
         left_widget = self.create_import_panel()
         splitter.addWidget(left_widget)
         
-        # 右侧：字幕预览
+        # Right side: subtitle preview
         self.preview_widget = SubtitlePreviewWidget()
         splitter.addWidget(self.preview_widget)
         
-        # 设置分割器比例
+        # Set splitter ratio
         splitter.setSizes([400, 400])
         
-        # 底部按钮
+        # Bottom buttons
         button_layout = QHBoxLayout()
         button_layout.addStretch()
         
-        self.cancel_button = QPushButton("取消")
+        self.cancel_button = QPushButton("Cancel")
         self.cancel_button.clicked.connect(self.reject)
         button_layout.addWidget(self.cancel_button)
         
-        self.import_button = QPushButton("导入字幕")
+        self.import_button = QPushButton("Import Subtitle")
         self.import_button.clicked.connect(self.import_subtitle)
         self.import_button.setDefault(True)
         self.import_button.setEnabled(False)
@@ -394,7 +394,7 @@ class SubtitleImportDialog(QDialog):
             QMessageBox.warning(self, "警告", "没有可导入的字幕数据")
     
     def _ms_to_time_string(self, ms):
-        """毫秒转时间字符串"""
+        """Convert milliseconds to time string"""
         seconds = ms // 1000
         minutes = seconds // 60
         hours = minutes // 60

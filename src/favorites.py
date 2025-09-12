@@ -10,18 +10,18 @@ from config import config
 
 
 def ensure_favorites_dock(mw):
-    """确保收藏面板已创建并显示"""
+    """Ensure favorites panel is created and displayed"""
     if getattr(mw, '_fav_list', None) is None:
         setup_favorites_dock(mw)
     refresh_favorites_list(mw)
 
 
 def setup_favorites_dock(mw):
-    """创建收藏列表侧边栏"""
+    """Create favorites list sidebar"""
     if getattr(mw, 'library', None) is None:
         mw.library = LibraryManager()
 
-    dock = QDockWidget("收藏", mw)
+    dock = QDockWidget("Favorites", mw)
     dock.setObjectName("FavoritesDock")
     dock.setAllowedAreas(Qt.LeftDockWidgetArea | Qt.RightDockWidgetArea)
 
@@ -48,7 +48,7 @@ def refresh_favorites_list(mw):
     for e in entries:
         video_name = os.path.basename(e.video_path)
         subtitle_name = os.path.basename(e.subtitle_path)
-        tag = "(含练习)" if e.exercises else ""
+        tag = "(with exercises)" if e.exercises else ""
         item = QListWidgetItem(f"{video_name} | {subtitle_name} {tag}")
         item.setData(Qt.UserRole, e.id)
         fav_list.addItem(item)
@@ -60,13 +60,13 @@ def save_current_to_favorites(mw):
 
     video_file = getattr(mw.video_widget, 'current_video_file', None)
     if not video_file:
-        QMessageBox.information(mw, "提示", "请先导入并加载视频")
+        QMessageBox.information(mw, "Tip", "Please import and load video first")
         return
     if not mw.subtitle_parser or not getattr(mw.subtitle_parser, 'current_file', None):
-        QMessageBox.information(mw, "提示", "请先导入字幕")
+        QMessageBox.information(mw, "Tip", "Please import subtitles first")
         return
 
-    # 记录当前播放进度与对应练习索引
+    # Record current playback progress and corresponding exercise index
     try:
         resume_pos = mw.video_widget.get_current_position() if hasattr(mw, 'video_widget') else 0
     except Exception:
@@ -100,20 +100,20 @@ def save_current_to_favorites(mw):
         mw.current_library_entry_id = entry.id
     except Exception:
         pass
-    mw.status_bar.showMessage("已保存到收藏")
+    mw.status_bar.showMessage("Saved to favorites")
     refresh_favorites_list(mw)
 
 
 def on_favorites_context_menu(mw, list_widget: QListWidget, pos):
-    """收藏列表右键菜单：打开/删除"""
+    """Favorites list right-click menu: open/delete"""
     item = list_widget.itemAt(pos)
     if item is None:
         return
     entry_id = item.data(Qt.UserRole)
 
     menu = QMenu(list_widget)
-    open_action = menu.addAction("打开")
-    delete_action = menu.addAction("删除")
+    open_action = menu.addAction("Open")
+    delete_action = menu.addAction("Delete")
     action = menu.exec(list_widget.mapToGlobal(pos))
 
     if action == open_action:
@@ -123,13 +123,13 @@ def on_favorites_context_menu(mw, list_widget: QListWidget, pos):
 
 
 def on_delete_favorite(mw, entry_id: str):
-    """删除收藏项"""
+    """Delete favorite item"""
     if getattr(mw, 'library', None) is None:
         mw.library = LibraryManager()
     reply = QMessageBox.question(
         mw,
-        "删除确认",
-        "确定要删除该收藏吗？此操作不会删除您的视频/字幕文件。",
+        "Delete Confirmation",
+        "Are you sure you want to delete this favorite? This operation will not delete your video/subtitle files.",
         QMessageBox.Yes | QMessageBox.No,
         QMessageBox.No,
     )
@@ -138,14 +138,14 @@ def on_delete_favorite(mw, entry_id: str):
 
     ok = mw.library.remove_entry(entry_id)
     if ok:
-        mw.status_bar.showMessage("已删除收藏")
+        mw.status_bar.showMessage("Favorite deleted")
         refresh_favorites_list(mw)
     else:
-        QMessageBox.warning(mw, "提示", "删除失败：未找到该收藏")
+        QMessageBox.warning(mw, "Tip", "Delete failed: favorite not found")
 
 
 def open_favorite_and_resume(mw, item: QListWidgetItem):
-    """打开收藏，并恢复到保存的进度后进入句子练习模式"""
+    """Open favorite and restore to saved progress, then enter sentence exercise mode"""
     if getattr(mw, 'library', None) is None:
         mw.library = LibraryManager()
     entry_id = item.data(Qt.UserRole)
@@ -153,34 +153,34 @@ def open_favorite_and_resume(mw, item: QListWidgetItem):
     if not entry:
         return
     if not os.path.exists(entry.video_path):
-        QMessageBox.warning(mw, "警告", f"视频文件不存在\n{entry.video_path}")
+        QMessageBox.warning(mw, "Warning", f"Video file does not exist\n{entry.video_path}")
         return
     if not os.path.exists(entry.subtitle_path):
-        QMessageBox.warning(mw, "警告", f"字幕文件不存在\n{entry.subtitle_path}")
+        QMessageBox.warning(mw, "Warning", f"Subtitle file does not exist\n{entry.subtitle_path}")
         return
 
-    # 加载视频
+    # Load video
     if not mw.video_widget.load_video(entry.video_path):
-        QMessageBox.warning(mw, "错误", "视频加载失败")
+        QMessageBox.warning(mw, "Error", "Video loading failed")
         return
 
-    # 加载字幕
+    # Load subtitles
     from subtitle_parser import SubtitleParser
     parser = SubtitleParser()
     if not parser.load_srt_file(entry.subtitle_path):
-        QMessageBox.warning(mw, "错误", "字幕加载失败")
+        QMessageBox.warning(mw, "Error", "Subtitle loading failed")
         return
     parser.set_time_offset(getattr(entry, 'time_offset_ms', 0) or 0)
     mw.on_subtitle_loaded(parser)
 
-    # 加载练习（如已保存）
+    # Load exercises (if saved)
     if entry.exercises:
         mw.generated_exercises = entry.exercises
-        mw.status_bar.showMessage("已加载收藏中的AI练习结果")
+        mw.status_bar.showMessage("Loaded AI exercise results from favorites")
     else:
-        mw.status_bar.showMessage("收藏无练习结果，可在练习配置中生成")
+        mw.status_bar.showMessage("No exercise results in favorites, can generate in exercise configuration")
 
-    # 恢复进度并进入练习模式（播放一句自动暂停填空）
+    # Restore progress and enter exercise mode (play one sentence and automatically pause for fill-in-the-blank)
     try:
         idx = getattr(entry, 'resume_exercise_index', 0) or 0
         if not idx:
@@ -193,18 +193,18 @@ def open_favorite_and_resume(mw, item: QListWidgetItem):
                             idx = i
                             break
 
-        # 设定索引并开始当前句子的播放
+        # Set index and start playing current sentence
         if mw.subtitle_parser and 0 <= idx < len(mw.subtitle_parser.subtitles):
             mw.current_exercise_index = idx
         else:
             mw.current_exercise_index = 0
         mw.exercise_mode = True
         mw.play_current_subtitle()
-        mw.status_bar.showMessage("已恢复到上次练习进度，并进入练习模式")
+        mw.status_bar.showMessage("Restored to last exercise progress and entered exercise mode")
     except Exception:
         pass
 
-    # 标记当前打开的收藏条目ID，启用自动保存机制
+    # Mark current open favorite entry ID, enable auto-save mechanism
     try:
         mw.current_library_entry_id = entry.id
     except Exception:

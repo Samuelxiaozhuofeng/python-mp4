@@ -1,6 +1,6 @@
 """
-AI练习生成器
-使用AI服务根据用户水平生成个性化听力填空练习
+AI Exercise Generator
+Uses AI service to generate personalized listening fill-in-the-blank exercises based on user level
 """
 import json
 import requests
@@ -9,60 +9,60 @@ from PySide6.QtCore import QObject, Signal, QThread
 from config import config
 
 class AIExerciseGenerator(QObject):
-    """AI练习生成器"""
+    """AI Exercise Generator"""
     
-    # 信号定义
+    # Signal definition
     generation_started = Signal()
-    generation_finished = Signal(bool, str, list)  # 成功/失败, 消息, 练习数据
-    progress_updated = Signal(int)  # 进度百分比
+    generation_finished = Signal(bool, str, list)  # Success/failure, message, exercise data
+    progress_updated = Signal(int)  # Progress percentage
     
     def __init__(self):
         super().__init__()
         self.ai_config = config.get_ai_config()
     
     def generate_exercises(self, subtitles: List, exercise_config: Dict) -> None:
-        """生成练习数据"""
+        """Generate exercise data"""
         self.generation_started.emit()
         
         try:
-            # 验证AI配置
+            # Validate AI configuration
             if not self.ai_config.get('api_key') or not self.ai_config.get('api_url'):
-                self.generation_finished.emit(False, "请先配置AI服务", [])
+                self.generation_finished.emit(False, "Please configure AI service first", [])
                 return
             
-            # 批量处理字幕
+            # Batch process subtitles
             exercises = []
             total_subtitles = len(subtitles)
-            batch_size = 10  # 减少批量大小，提高成功率
+            batch_size = 10  # Reduce batch size to improve success rate
             
-            # 按批次处理
+            # Process by batch
             for batch_start in range(0, total_subtitles, batch_size):
                 batch_end = min(batch_start + batch_size, total_subtitles)
                 batch_subtitles = subtitles[batch_start:batch_end]
                 
-                # 更新进度
+                # Update progress
                 progress = int((batch_end) / total_subtitles * 100)
                 self.progress_updated.emit(progress)
                 
-                print(f"[DEBUG] 处理批次 {batch_start//batch_size + 1}: {batch_start+1}-{batch_end} 句")
+                print(f"[DEBUG] Processing batch {batch_start//batch_size + 1}: {batch_start+1}-{batch_end} sentences")
                 
-                # 批量生成练习
+                # Batch generate exercises
                 batch_exercises = self.generate_batch_exercises(batch_subtitles, exercise_config, batch_start, total_subtitles)
                 
                 if batch_exercises:
                     exercises.extend(batch_exercises)
                 else:
-                    # 批量处理失败，回退到单独处理
-                    print(f"[DEBUG] 批次处理失败，回退到单独处理")
+                    # Batch processing failed, fallback to individual processing
+                    print(f"[DEBUG] Batch processing failed, falling back to individual processing")
                     for i, subtitle in enumerate(batch_subtitles):
                         exercise = self.generate_single_exercise(subtitle, exercise_config, batch_start + i + 1, total_subtitles)
                         if exercise:
                             exercises.append(exercise)
             
-            self.generation_finished.emit(True, f"成功生成 {len(exercises)} 个练习", exercises)
+            self.generation_finished.emit(True, f"Successfully generated {len(exercises)} exercises", exercises)
             
         except Exception as e:
-            self.generation_finished.emit(False, f"生成失败: {str(e)}", [])
+            self.generation_finished.emit(False, f"Generation failed: {str(e)}", [])
     
     def generate_batch_exercises(self, batch_subtitles: List, exercise_config: Dict, batch_start_index: int, total_subtitles: int) -> Optional[List[Dict]]:
         """批量生成练习"""
@@ -546,7 +546,7 @@ class AIExerciseGenerator(QObject):
 class AIExerciseThread(QThread):
     """AI练习生成线程"""
     
-    # 信号定义
+    # Signal definition
     generation_started = Signal()
     generation_finished = Signal(bool, str, list)
     progress_updated = Signal(int)

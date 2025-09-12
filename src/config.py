@@ -1,6 +1,6 @@
 """
-配置管理模块
-处理应用配置的加载、保存和验证
+Configuration management module
+Handles loading, saving and validation of application configuration
 """
 import json
 import os
@@ -8,7 +8,7 @@ from typing import Dict, Any, Optional
 from pathlib import Path
 
 class ConfigManager:
-    """配置管理器"""
+    """Configuration manager"""
     
     def __init__(self, config_file: str = "config.json"):
         self.config_file = config_file
@@ -17,29 +17,29 @@ class ConfigManager:
         self.load_config()
     
     def load_config(self) -> None:
-        """加载配置文件"""
+        """Load configuration file"""
         if self.config_path.exists():
             try:
                 with open(self.config_path, 'r', encoding='utf-8') as f:
                     self._config = json.load(f)
             except (json.JSONDecodeError, IOError) as e:
-                print(f"配置文件加载失败: {e}")
+                print(f"Configuration file loading failed: {e}")
                 self._config = self.get_default_config()
         else:
             self._config = self.get_default_config()
     
     def save_config(self) -> bool:
-        """保存配置到文件"""
+        """Save configuration to file"""
         try:
             with open(self.config_path, 'w', encoding='utf-8') as f:
                 json.dump(self._config, f, indent=2, ensure_ascii=False)
             return True
         except IOError as e:
-            print(f"配置文件保存失败: {e}")
+            print(f"Configuration file saving failed: {e}")
             return False
     
     def get_default_config(self) -> Dict[str, Any]:
-        """获取默认配置"""
+        """Get default configuration"""
         return {
             "ai_service": {
                 "api_key": "",
@@ -50,7 +50,7 @@ class ConfigManager:
             "exercise": {
                 "language": "English",
                 "level": "B1-B2",
-                "focus_areas": ["名词", "动词"],
+                "focus_areas": ["nouns", "verbs"],
                 "blank_density": 25
             },
             "ui": {
@@ -65,7 +65,7 @@ class ConfigManager:
         }
     
     def get(self, key: str, default: Any = None) -> Any:
-        """获取配置值，支持点号分隔的嵌套键"""
+        """Get configuration value, supports dot-separated nested keys"""
         keys = key.split('.')
         value = self._config
         
@@ -78,39 +78,39 @@ class ConfigManager:
         return value
     
     def set(self, key: str, value: Any) -> None:
-        """设置配置值，支持点号分隔的嵌套键"""
+        """Set configuration value, supports dot-separated nested keys"""
         keys = key.split('.')
         config = self._config
         
-        # 导航到目标字典
+        # Navigate to target dictionary
         for k in keys[:-1]:
             if k not in config:
                 config[k] = {}
             config = config[k]
         
-        # 设置值
+        # Set value
         config[keys[-1]] = value
     
     def get_ai_config(self) -> Dict[str, Any]:
-        """获取AI服务配置"""
+        """Get AI service configuration"""
         return self.get('ai_service', {})
     
     def set_ai_config(self, api_key: str, api_url: str, model: str) -> None:
-        """设置AI服务配置"""
+        """Set AI service configuration"""
         self.set('ai_service.api_key', api_key)
         self.set('ai_service.api_url', api_url)
         self.set('ai_service.model', model)
     
     def get_exercise_config(self) -> Dict[str, Any]:
-        """获取练习配置"""
+        """Get exercise configuration"""
         return self.get('exercise', {})
     
     def set_exercise_config(self, language: str, level: str, focus_areas: list, blank_density: int) -> None:
-        """设置练习配置"""
+        """Set exercise configuration"""
         self.set('exercise.language', language)
         self.set('exercise.level', level)
         self.set('exercise.focus_areas', focus_areas)
         self.set('exercise.blank_density', blank_density)
 
-# 全局配置实例
+# Global configuration instance
 config = ConfigManager()

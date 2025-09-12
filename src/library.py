@@ -1,6 +1,6 @@
 """
-本地收藏/库管理模块
-负责保存与读取：视频路径、字幕路径、时间偏移、AI生成的练习结果等
+Local favorites/library management module
+Responsible for saving and reading: video paths, subtitle paths, time offsets, AI-generated exercise results, etc.
 """
 from __future__ import annotations
 
@@ -38,7 +38,7 @@ class LibraryEntry:
 
 
 class LibraryManager:
-    """简单的JSON文件库管理器"""
+    """Simple JSON file library manager"""
 
     def __init__(self):
         _ensure_lib_file()
@@ -56,9 +56,9 @@ class LibraryManager:
             json.dump(self._data, f, ensure_ascii=False, indent=2)
 
     def _make_id(self, video_path: str, subtitle_path: str) -> str:
-        # 基于路径生成稳定ID（避免hash种子差异）
+        # Generate stable ID based on path (avoid hash seed differences)
         key = f"{os.path.abspath(video_path)}|{os.path.abspath(subtitle_path)}".lower()
-        # 简化为可读ID
+        # Simplify to readable ID
         import hashlib
         return hashlib.md5(key.encode("utf-8")).hexdigest()
 

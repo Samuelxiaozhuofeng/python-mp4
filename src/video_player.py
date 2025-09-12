@@ -1,6 +1,6 @@
 """
-视频播放器模块
-基于QMediaPlayer实现视频播放功能
+Video player module
+Implements video playback functionality based on QMediaPlayer
 """
 import os
 from pathlib import Path
@@ -13,9 +13,9 @@ from PySide6.QtMultimediaWidgets import QVideoWidget
 from PySide6.QtGui import QKeySequence, QShortcut
 
 class VideoControlWidget(QWidget):
-    """视频控制面板"""
+    """Video control panel"""
     
-    # 定义信号
+    # Define signals
     play_pause_clicked = Signal()
     stop_clicked = Signal()
     position_changed = Signal(int)
@@ -27,56 +27,56 @@ class VideoControlWidget(QWidget):
         self.setup_ui()
     
     def setup_ui(self):
-        """设置UI"""
+        """Setup UI"""
         layout = QHBoxLayout(self)
         layout.setContentsMargins(5, 5, 5, 5)
         
-        # 播放/暂停按钮
+        # Play/pause button
         self.play_button = QPushButton()
         self.play_button.setIcon(self.style().standardIcon(QStyle.SP_MediaPlay))
         self.play_button.setFixedSize(40, 30)
-        self.play_button.setToolTip("播放/暂停 (空格键)")
+        self.play_button.setToolTip("Play/Pause (Space)")
         self.play_button.clicked.connect(self.play_pause_clicked.emit)
         layout.addWidget(self.play_button)
         
-        # 停止按钮
+        # Stop button
         self.stop_button = QPushButton()
         self.stop_button.setIcon(self.style().standardIcon(QStyle.SP_MediaStop))
         self.stop_button.setFixedSize(40, 30)
-        self.stop_button.setToolTip("停止")
+        self.stop_button.setToolTip("Stop")
         self.stop_button.clicked.connect(self.stop_clicked.emit)
         layout.addWidget(self.stop_button)
         
-        # 时间标签
+        # Time label
         self.time_label = QLabel("00:00 / 00:00")
         self.time_label.setMinimumWidth(80)
         layout.addWidget(self.time_label)
         
-        # 进度条
+        # Progress bar
         self.position_slider = QSlider(Qt.Horizontal)
         self.position_slider.setRange(0, 0)
         self.position_slider.sliderMoved.connect(self.position_changed.emit)
-        self.position_slider.setToolTip("拖拽调整播放进度")
+        self.position_slider.setToolTip("Drag to adjust playback progress")
         layout.addWidget(self.position_slider)
         
-        # 音量标签
+        # Volume label
         volume_label = QLabel("🔊")
         layout.addWidget(volume_label)
         
-        # 音量滑块
+        # Volume slider
         self.volume_slider = QSlider(Qt.Horizontal)
         self.volume_slider.setRange(0, 100)
         self.volume_slider.setValue(50)
         self.volume_slider.setMaximumWidth(80)
-        self.volume_slider.setToolTip("调整音量")
+        self.volume_slider.setToolTip("Adjust volume")
         self.volume_slider.valueChanged.connect(self.volume_changed.emit)
         layout.addWidget(self.volume_slider)
         
-        # 全屏按钮
+        # Fullscreen button
         self.fullscreen_button = QPushButton()
         self.fullscreen_button.setIcon(self.style().standardIcon(QStyle.SP_TitleBarMaxButton))
         self.fullscreen_button.setFixedSize(40, 30)
-        self.fullscreen_button.setToolTip("全屏播放 (F11)")
+        self.fullscreen_button.setToolTip("Fullscreen playback (F11)")
         self.fullscreen_button.clicked.connect(self.fullscreen_requested.emit)
         layout.addWidget(self.fullscreen_button)
     
@@ -108,22 +108,22 @@ class VideoControlWidget(QWidget):
 class VideoPlayerWidget(QFrame):
     """视频播放器组件"""
     
-    # 定义信号
-    video_loaded = Signal(str)  # 视频加载完成
-    position_changed = Signal(int)  # 播放位置改变
-    duration_changed = Signal(int)  # 时长改变
-    playback_state_changed = Signal(bool)  # 播放状态改变
+    # Define signals
+    video_loaded = Signal(str)  # Video loading completed
+    position_changed = Signal(int)  # Playback position changed
+    duration_changed = Signal(int)  # Duration changed
+    playback_state_changed = Signal(bool)  # Playback state changed
     
     def __init__(self):
         super().__init__()
         self.current_video_file = None
-        self.target_position = None  # 目标播放位置
+        self.target_position = None  # Target playback position
         self.setup_ui()
         self.setup_media_player()
         self.setup_shortcuts()
     
     def setup_ui(self):
-        """设置UI"""
+        """Setup UI"""
         self.setFrameStyle(QFrame.StyledPanel)
         self.setMinimumSize(400, 300)
         
@@ -131,13 +131,13 @@ class VideoPlayerWidget(QFrame):
         layout.setContentsMargins(2, 2, 2, 2)
         layout.setSpacing(5)
         
-        # 视频显示区域
+        # Video display area
         self.video_widget = QVideoWidget()
         self.video_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.video_widget.setStyleSheet("background-color: black;")
         layout.addWidget(self.video_widget)
         
-        # 控制面板
+        # Control panel
         self.control_widget = VideoControlWidget()
         self.control_widget.play_pause_clicked.connect(self.toggle_playback)
         self.control_widget.stop_clicked.connect(self.stop_playback)
@@ -146,37 +146,37 @@ class VideoPlayerWidget(QFrame):
         self.control_widget.fullscreen_requested.connect(self.toggle_fullscreen)
         layout.addWidget(self.control_widget)
         
-        # 默认显示提示信息
+        # Default display prompt information
         self.show_placeholder()
     
     def setup_media_player(self):
-        """设置媒体播放器"""
+        """Setup media player"""
         self.media_player = QMediaPlayer()
         self.audio_output = QAudioOutput()
         self.media_player.setAudioOutput(self.audio_output)
         self.media_player.setVideoOutput(self.video_widget)
         
-        # 连接信号
+        # Connect signals
         self.media_player.positionChanged.connect(self.on_position_changed)
         self.media_player.durationChanged.connect(self.on_duration_changed)
         self.media_player.playbackStateChanged.connect(self.on_playback_state_changed)
         self.media_player.mediaStatusChanged.connect(self.on_media_status_changed)
         self.media_player.errorOccurred.connect(self.on_error_occurred)
         
-        # 设置初始音量
+        # Set initial volume
         self.audio_output.setVolume(0.5)
     
     def setup_shortcuts(self):
-        """设置快捷键"""
-        # 空格键播放/暂停
+        """Setup shortcuts"""
+        # Space key play/pause
         play_shortcut = QShortcut(QKeySequence(Qt.Key_Space), self)
         play_shortcut.activated.connect(self.toggle_playback)
         
-        # F11全屏
+        # F11 fullscreen
         fullscreen_shortcut = QShortcut(QKeySequence(Qt.Key_F11), self)
         fullscreen_shortcut.activated.connect(self.toggle_fullscreen)
         
-        # 左右箭头快进快退
+        # Left/right arrow fast forward/rewind
         forward_shortcut = QShortcut(QKeySequence(Qt.Key_Right), self)
         forward_shortcut.activated.connect(lambda: self.skip_time(5000))
         
@@ -184,9 +184,9 @@ class VideoPlayerWidget(QFrame):
         backward_shortcut.activated.connect(lambda: self.skip_time(-5000))
     
     def show_placeholder(self):
-        """显示占位符信息"""
+        """Show placeholder information"""
         placeholder_layout = QVBoxLayout()
-        placeholder_label = QLabel("🎬 视频播放器已就绪\n\n点击 '文件' → '导入视频和字幕' 开始")
+        placeholder_label = QLabel("🎬 Video player ready\n\nClick 'File' → 'Import Video and Subtitles' to start")
         placeholder_label.setAlignment(Qt.AlignCenter)
         placeholder_label.setStyleSheet("""
             QLabel {
@@ -200,7 +200,7 @@ class VideoPlayerWidget(QFrame):
         """)
         placeholder_layout.addWidget(placeholder_label)
         
-        # 临时隐藏视频组件，显示占位符
+        # Temporarily hide video component, show placeholder
         self.video_widget.hide()
         if not hasattr(self, 'placeholder_widget'):
             self.placeholder_widget = QWidget()
@@ -208,15 +208,15 @@ class VideoPlayerWidget(QFrame):
             self.layout().insertWidget(0, self.placeholder_widget)
     
     def hide_placeholder(self):
-        """隐藏占位符"""
+        """Hide placeholder"""
         if hasattr(self, 'placeholder_widget'):
             self.placeholder_widget.hide()
         self.video_widget.show()
     
     def load_video(self, video_path):
-        """加载视频文件"""
+        """Load video file"""
         if not os.path.exists(video_path):
-            QMessageBox.warning(self, "错误", f"视频文件不存在: {video_path}")
+            QMessageBox.warning(self, "Error", f"Video file does not exist: {video_path}")
             return False
         
         try:
@@ -226,41 +226,41 @@ class VideoPlayerWidget(QFrame):
             self.hide_placeholder()
             return True
         except Exception as e:
-            QMessageBox.critical(self, "错误", f"加载视频失败: {str(e)}")
+            QMessageBox.critical(self, "Error", f"Failed to load video: {str(e)}")
             return False
     
     def toggle_playback(self):
-        """切换播放/暂停状态"""
+        """Toggle play/pause state"""
         if self.media_player.playbackState() == QMediaPlayer.PlayingState:
             self.media_player.pause()
         else:
             self.media_player.play()
     
     def stop_playback(self):
-        """停止播放"""
+        """Stop playback"""
         self.media_player.stop()
     
     def set_position(self, position):
-        """设置播放位置"""
+        """Set playback position"""
         self.media_player.setPosition(position)
     
     def set_volume(self, volume):
-        """设置音量 (0-100)"""
+        """Set volume (0-100)"""
         self.audio_output.setVolume(volume / 100.0)
     
     def skip_time(self, milliseconds):
-        """跳转时间 (毫秒)"""
+        """Skip time (milliseconds)"""
         current_pos = self.media_player.position()
         new_pos = max(0, min(current_pos + milliseconds, self.media_player.duration()))
         self.set_position(new_pos)
     
     def play_segment(self, start_ms, end_ms):
-        """播放指定时间段"""
+        """Play specified time segment"""
         self.target_position = end_ms
         self.set_position(start_ms)
         self.media_player.play()
         
-        # 设置定时器在指定时间停止
+        # Set timer to stop at specified time
         if hasattr(self, 'segment_timer'):
             self.segment_timer.stop()
         
@@ -270,64 +270,64 @@ class VideoPlayerWidget(QFrame):
         self.segment_timer.start(end_ms - start_ms)
     
     def toggle_fullscreen(self):
-        """切换全屏模式"""
+        """Toggle fullscreen mode"""
         if self.video_widget.isFullScreen():
             self.video_widget.setFullScreen(False)
         else:
             self.video_widget.setFullScreen(True)
     
-    # 媒体播放器事件处理
+    # Media player event handling
     def on_position_changed(self, position):
-        """播放位置改变"""
+        """Playback position changed"""
         self.control_widget.update_position(position, self.media_player.duration())
         self.position_changed.emit(position)
         
-        # 检查是否需要在目标位置停止
+        # Check if need to stop at target position
         if self.target_position and position >= self.target_position:
             self.media_player.pause()
             self.target_position = None
     
     def on_duration_changed(self, duration):
-        """时长改变"""
+        """Duration changed"""
         self.control_widget.update_duration(duration)
         self.duration_changed.emit(duration)
     
     def on_playback_state_changed(self, state):
-        """播放状态改变"""
+        """Playback state changed"""
         is_playing = (state == QMediaPlayer.PlayingState)
         self.control_widget.set_play_icon(is_playing)
         self.playback_state_changed.emit(is_playing)
     
     def on_media_status_changed(self, status):
-        """媒体状态改变"""
+        """Media status changed"""
         if status == QMediaPlayer.LoadedMedia:
-            # 视频加载完成
+            # Video loading completed
             if self.current_video_file:
                 self.video_loaded.emit(self.current_video_file)
         elif status == QMediaPlayer.InvalidMedia:
-            QMessageBox.warning(self, "警告", "无效的媒体文件")
+            QMessageBox.warning(self, "Warning", "Invalid media file")
     
     def on_error_occurred(self, error):
-        """播放错误处理"""
+        """Playback error handling"""
         error_messages = {
-            QMediaPlayer.NoError: "无错误",
-            QMediaPlayer.ResourceError: "资源错误",
-            QMediaPlayer.FormatError: "格式不支持",
-            QMediaPlayer.NetworkError: "网络错误",
-            QMediaPlayer.AccessDeniedError: "访问被拒绝"
+            QMediaPlayer.NoError: "No error",
+            QMediaPlayer.ResourceError: "Resource error",
+            QMediaPlayer.FormatError: "Format not supported",
+            QMediaPlayer.NetworkError: "Network error",
+            QMediaPlayer.AccessDeniedError: "Access denied"
         }
         
-        error_msg = error_messages.get(error, f"未知错误 ({error})")
-        QMessageBox.critical(self, "播放错误", f"视频播放出错: {error_msg}")
+        error_msg = error_messages.get(error, f"Unknown error ({error})")
+        QMessageBox.critical(self, "Playback Error", f"Video playback error: {error_msg}")
     
     def get_current_position(self):
-        """获取当前播放位置 (毫秒)"""
+        """Get current playback position (milliseconds)"""
         return self.media_player.position()
     
     def get_duration(self):
-        """获取视频总时长 (毫秒)"""
+        """Get video total duration (milliseconds)"""
         return self.media_player.duration()
     
     def is_playing(self):
-        """检查是否正在播放"""
+        """Check if currently playing"""
         return self.media_player.playbackState() == QMediaPlayer.PlayingState

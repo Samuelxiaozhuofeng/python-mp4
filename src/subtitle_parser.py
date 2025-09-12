@@ -1,6 +1,6 @@
 """
-字幕解析模块
-处理SRT字幕文件的解析、验证和时间同步
+Subtitle parsing module
+Handles parsing, validation and time synchronization of SRT subtitle files
 """
 import os
 import re
@@ -12,18 +12,18 @@ from PySide6.QtCore import QObject, Signal
 
 @dataclass
 class SubtitleItem:
-    """字幕条目数据类"""
+    """Subtitle item data class"""
     index: int
-    start_time: int  # 毫秒
-    end_time: int    # 毫秒
+    start_time: int  # milliseconds
+    end_time: int    # milliseconds
     text: str
-    duration: int = 0    # 毫秒，默认值
+    duration: int = 0    # milliseconds, default value
     
     def __post_init__(self):
         self.duration = self.end_time - self.start_time
     
     def to_dict(self) -> Dict:
-        """转换为字典格式"""
+        """Convert to dictionary format"""
         return {
             'index': self.index,
             'start_time': self.start_time,
@@ -33,37 +33,37 @@ class SubtitleItem:
         }
 
 class SubtitleParser(QObject):
-    """字幕解析器"""
+    """Subtitle parser"""
     
-    # 定义信号
+    # Define signals
     parsing_started = Signal()
-    parsing_finished = Signal(bool, str)  # 成功/失败, 消息
-    progress_updated = Signal(int)  # 进度百分比
+    parsing_finished = Signal(bool, str)  # Success/failure, message
+    progress_updated = Signal(int)  # Progress percentage
     
     def __init__(self):
         super().__init__()
         self.subtitles: List[SubtitleItem] = []
         self.current_file = None
-        self.time_offset = 0  # 时间偏移量(毫秒)
+        self.time_offset = 0  # Time offset (milliseconds)
     
     def load_srt_file(self, file_path: str) -> bool:
-        """加载SRT字幕文件"""
+        """Load SRT subtitle file"""
         if not os.path.exists(file_path):
-            self.parsing_finished.emit(False, f"文件不存在: {file_path}")
+            self.parsing_finished.emit(False, f"File does not exist: {file_path}")
             return False
         
         if not file_path.lower().endswith('.srt'):
-            self.parsing_finished.emit(False, "不支持的文件格式，请选择SRT文件")
+            self.parsing_finished.emit(False, "Unsupported file format, please select SRT file")
             return False
         
         try:
             self.parsing_started.emit()
             
-            # 使用pysrt解析SRT文件
+            # Use pysrt to parse SRT file
             srt_file = pysrt.open(file_path, encoding='utf-8')
             
             if not srt_file:
-                # 尝试其他编码
+                # Try other encodings
                 encodings = ['gbk', 'gb2312', 'latin-1', 'cp1252']
                 for encoding in encodings:
                     try:
@@ -74,23 +74,23 @@ class SubtitleParser(QObject):
                         continue
             
             if not srt_file:
-                self.parsing_finished.emit(False, "无法解析字幕文件，请检查文件格式和编码")
+                self.parsing_finished.emit(False, "Unable to parse subtitle file, please check file format and encoding")
                 return False
             
-            # 转换为内部格式
+            # Convert to internal format
             self.subtitles = []
             total_items = len(srt_file)
             
             for i, item in enumerate(srt_file):
-                # 更新进度
+                # Update progress
                 progress = int((i + 1) / total_items * 100)
                 self.progress_updated.emit(progress)
                 
-                # 转换时间格式 (pysrt使用毫秒)
+                # Convert time format (pysrt uses milliseconds)
                 start_ms = self._time_to_milliseconds(item.start)
                 end_ms = self._time_to_milliseconds(item.end)
                 
-                # 清理文本 (移除HTML标签等)
+                # Clean text (remove HTML tags, etc.)
                 clean_text = self._clean_text(item.text)
                 
                 subtitle_item = SubtitleItem(
@@ -103,11 +103,11 @@ class SubtitleParser(QObject):
                 self.subtitles.append(subtitle_item)
             
             self.current_file = file_path
-            self.parsing_finished.emit(True, f"成功加载 {len(self.subtitles)} 条字幕")
+            self.parsing_finished.emit(True, f"Successfully loaded {len(self.subtitles)} subtitles")
             return True
             
         except Exception as e:
-            self.parsing_finished.emit(False, f"解析失败: {str(e)}")
+            self.parsing_finished.emit(False, f"Parsing failed: {str(e)}")
             return False
     
     def _time_to_milliseconds(self, time_obj) -> int:

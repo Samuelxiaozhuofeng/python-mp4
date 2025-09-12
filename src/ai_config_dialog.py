@@ -1,6 +1,6 @@
 """
-AI服务配置对话框
-允许用户配置自定义AI API设置
+AI service configuration dialog
+Allows users to configure custom AI API settings
 """
 import requests
 from PySide6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QFormLayout,
@@ -13,10 +13,10 @@ from PySide6.QtGui import QFont
 from config import config
 
 class AITestThread(QThread):
-    """AI API连接测试线程"""
+    """AI API connection test thread"""
     
-    # 信号定义
-    test_completed = Signal(bool, str)  # 测试完成信号 (成功/失败, 消息)
+    # Signal definition
+    test_completed = Signal(bool, str)  # Test completion signal (success/failure, message)
     
     def __init__(self, api_key, api_url, model):
         super().__init__()
@@ -25,9 +25,9 @@ class AITestThread(QThread):
         self.model = model
     
     def run(self):
-        """执行API测试"""
+        """Execute API test"""
         try:
-            # 构建测试请求
+            # Build test request
             headers = {
                 "Authorization": f"Bearer {self.api_key}",
                 "Content-Type": "application/json"
@@ -42,7 +42,7 @@ class AITestThread(QThread):
                 "temperature": 0.1
             }
             
-            # 发送测试请求
+            # Send test request
             response = requests.post(
                 self.api_url, 
                 json=data, 
@@ -53,22 +53,22 @@ class AITestThread(QThread):
             if response.status_code == 200:
                 result = response.json()
                 if 'choices' in result and len(result['choices']) > 0:
-                    self.test_completed.emit(True, "连接成功！API响应正常。")
+                    self.test_completed.emit(True, "Connection successful! API response normal.")
                 else:
-                    self.test_completed.emit(False, "API响应格式异常")
+                    self.test_completed.emit(False, "API response format abnormal")
             else:
                 error_msg = f"HTTP {response.status_code}: {response.text[:200]}"
                 self.test_completed.emit(False, error_msg)
                 
         except requests.exceptions.Timeout:
-            self.test_completed.emit(False, "连接超时，请检查网络或API URL")
+            self.test_completed.emit(False, "Connection timeout, please check network or API URL")
         except requests.exceptions.ConnectionError:
-            self.test_completed.emit(False, "无法连接到API服务器")
+            self.test_completed.emit(False, "Unable to connect to API server")
         except Exception as e:
-            self.test_completed.emit(False, f"测试失败: {str(e)}")
+            self.test_completed.emit(False, f"Test failed: {str(e)}")
 
 class AIConfigDialog(QDialog):
-    """AI服务配置对话框"""
+    """AI service configuration dialog"""
     
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -77,37 +77,37 @@ class AIConfigDialog(QDialog):
         self.load_config()
     
     def setup_ui(self):
-        """设置用户界面"""
-        self.setWindowTitle("AI服务配置")
+        """Setup user interface"""
+        self.setWindowTitle("AI Service Configuration")
         self.setMinimumSize(500, 400)
         self.setModal(True)
         
         layout = QVBoxLayout(self)
         
-        # API配置组
-        api_group = QGroupBox("API配置")
+        # API configuration group
+        api_group = QGroupBox("API Configuration")
         api_layout = QFormLayout(api_group)
         
-        # API Key输入
+        # API Key input
         self.api_key_edit = QLineEdit()
         self.api_key_edit.setEchoMode(QLineEdit.Password)
-        self.api_key_edit.setPlaceholderText("输入您的API密钥")
+        self.api_key_edit.setPlaceholderText("Enter your API key")
         api_layout.addRow("API Key:", self.api_key_edit)
         
-        # 显示/隐藏API Key按钮
+        # Show/hide API Key button
         show_key_layout = QHBoxLayout()
-        self.show_key_checkbox = QCheckBox("显示API Key")
+        self.show_key_checkbox = QCheckBox("Show API Key")
         self.show_key_checkbox.toggled.connect(self.toggle_api_key_visibility)
         show_key_layout.addWidget(self.show_key_checkbox)
         show_key_layout.addStretch()
         api_layout.addRow("", show_key_layout)
         
-        # API URL输入
+        # API URL input
         self.api_url_edit = QLineEdit()
         self.api_url_edit.setPlaceholderText("https://api.openai.com/v1/chat/completions")
         api_layout.addRow("API URL:", self.api_url_edit)
         
-        # 模型选择
+        # Model selection
         self.model_combo = QComboBox()
         self.model_combo.setEditable(True)
         self.model_combo.addItems([
@@ -118,24 +118,24 @@ class AIConfigDialog(QDialog):
             "claude-3-opus-20240229",
             "claude-3-haiku-20240307"
         ])
-        api_layout.addRow("AI模型:", self.model_combo)
+        api_layout.addRow("AI Model:", self.model_combo)
         
-        # 超时设置
+        # Timeout settings
         self.timeout_spin = QSpinBox()
         self.timeout_spin.setRange(5, 120)
         self.timeout_spin.setValue(30)
         self.timeout_spin.setSuffix(" 秒")
-        api_layout.addRow("请求超时:", self.timeout_spin)
+        api_layout.addRow("Request Timeout:", self.timeout_spin)
         
         layout.addWidget(api_group)
         
-        # 连接测试组
-        test_group = QGroupBox("连接测试")
+        # Connection test group
+        test_group = QGroupBox("Connection Test")
         test_layout = QVBoxLayout(test_group)
         
-        # 测试按钮和进度条
+        # Test button and progress bar
         test_button_layout = QHBoxLayout()
-        self.test_button = QPushButton("测试连接")
+        self.test_button = QPushButton("Test Connection")
         self.test_button.clicked.connect(self.test_connection)
         test_button_layout.addWidget(self.test_button)
         
@@ -145,20 +145,20 @@ class AIConfigDialog(QDialog):
         
         test_layout.addLayout(test_button_layout)
         
-        # 测试结果显示
+        # Test result display
         self.result_text = QTextEdit()
         self.result_text.setMaximumHeight(80)
         self.result_text.setReadOnly(True)
-        self.result_text.setPlaceholderText("点击'测试连接'验证API配置...")
+        self.result_text.setPlaceholderText("Click 'Test Connection' to verify API configuration...")
         test_layout.addWidget(self.result_text)
         
         layout.addWidget(test_group)
         
-        # 预设配置组
-        preset_group = QGroupBox("预设配置")
+        # Preset configuration group
+        preset_group = QGroupBox("Preset Configuration")
         preset_layout = QHBoxLayout(preset_group)
         
-        openai_btn = QPushButton("OpenAI官方")
+        openai_btn = QPushButton("OpenAI Official")
         openai_btn.clicked.connect(lambda: self.load_preset("openai"))
         preset_layout.addWidget(openai_btn)
         
@@ -173,15 +173,15 @@ class AIConfigDialog(QDialog):
         preset_layout.addStretch()
         layout.addWidget(preset_group)
         
-        # 按钮区域
+        # Button area
         button_layout = QHBoxLayout()
         button_layout.addStretch()
         
-        self.cancel_button = QPushButton("取消")
+        self.cancel_button = QPushButton("Cancel")
         self.cancel_button.clicked.connect(self.reject)
         button_layout.addWidget(self.cancel_button)
         
-        self.save_button = QPushButton("保存")
+        self.save_button = QPushButton("Save")
         self.save_button.clicked.connect(self.save_config)
         self.save_button.setDefault(True)
         button_layout.addWidget(self.save_button)

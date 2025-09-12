@@ -1,6 +1,6 @@
 """
-交互式练习组件
-实现字幕显示、挖空练习和用户交互功能
+Interactive exercise component
+Implements subtitle display, fill-in-the-blank exercises and user interaction functionality
 """
 import re
 from typing import List, Dict, Optional, Tuple
@@ -97,10 +97,10 @@ class FlowLayout(QLayout):
         return (y + line_height + bottom) - rect.y()
 
 class BlankInputWidget(QLineEdit):
-    """挖空输入框组件"""
+    """Blank input box component"""
     
-    # 信号定义
-    answer_submitted = Signal(str)  # 答案提交信号
+    # Signal definition
+    answer_submitted = Signal(str)  # Answer submission signal
     
     def __init__(self, expected_answer: str, placeholder: str = ""):
         super().__init__()
@@ -109,14 +109,14 @@ class BlankInputWidget(QLineEdit):
         self.setup_ui(placeholder)
     
     def setup_ui(self, placeholder: str):
-        """设置UI"""
-        self.setPlaceholderText(placeholder or "输入答案...")
+        """Setup UI"""
+        self.setPlaceholderText(placeholder or "Enter answer...")
         # Dynamic width based on expected answer length for better rhythm
         approx = max(40, min(260, 12 * max(1, len(self.expected_answer)) + 20))
         self.setMinimumWidth(approx)
         self.setMaximumWidth(max(approx, 100))
         
-        # 优化样式，更好地融入句子
+        # Optimize style to better integrate into sentences
         self.setStyleSheet("""
             QLineEdit {
                 border: 1px solid #2196f3;
@@ -136,13 +136,13 @@ class BlankInputWidget(QLineEdit):
             }
         """)
         
-        # 连接信号
+        # Connect signals
         self.textChanged.connect(self.on_text_changed)
         self.returnPressed.connect(self.submit_answer)
     
     def on_text_changed(self, text):
-        """文本改变时的处理"""
-        # 实时验证答案
+        """Handle text changes"""
+        # Real-time answer validation
         if text.strip().lower() == self.expected_answer:
             self.set_correct_style()
             self.is_correct = True
@@ -151,7 +151,7 @@ class BlankInputWidget(QLineEdit):
             self.is_correct = False
     
     def submit_answer(self):
-        """提交答案"""
+        """Submit answer"""
         answer = self.text().strip()
         self.answer_submitted.emit(answer)
         
@@ -163,7 +163,7 @@ class BlankInputWidget(QLineEdit):
             self.is_correct = False
 
     def submit_without_signal(self):
-        """提交答案但不发出 answer_submitted 信号（用于程序化验证）"""
+        """Submit answer without emitting answer_submitted signal (for programmatic validation)"""
         answer = self.text().strip()
         if answer.lower() == self.expected_answer:
             self.set_correct_style()
@@ -173,7 +173,7 @@ class BlankInputWidget(QLineEdit):
             self.is_correct = False
     
     def set_correct_style(self):
-        """设置正确答案样式"""
+        """Set correct answer style"""
         self.setStyleSheet("""
             QLineEdit {
                 border: 2px solid #4caf50;
@@ -189,7 +189,7 @@ class BlankInputWidget(QLineEdit):
         """)
     
     def set_incorrect_style(self):
-        """设置错误答案样式"""
+        """Set incorrect answer style"""
         self.setStyleSheet("""
             QLineEdit {
                 border: 2px solid #f44336;
@@ -205,7 +205,7 @@ class BlankInputWidget(QLineEdit):
         """)
     
     def set_normal_style(self):
-        """设置正常样式"""
+        """Set normal style"""
         self.setStyleSheet("""
             QLineEdit {
                 border: 2px solid #e3f2fd;
@@ -231,27 +231,27 @@ class BlankInputWidget(QLineEdit):
         """)
     
     def show_answer(self):
-        """显示正确答案"""
+        """Show correct answer"""
         self.setText(self.expected_answer.title())
         self.set_correct_style()
         self.is_correct = True
         self.setReadOnly(True)
 
 class SubtitleExerciseWidget(QFrame):
-    """字幕练习组件"""
+    """Subtitle exercise component"""
     
-    # 信号定义
-    exercise_completed = Signal()  # 练习完成信号
-    next_exercise_requested = Signal()  # 请求下一个练习信号
-    hint_requested = Signal()  # 请求提示信号
-    show_answer_requested = Signal()  # 请求显示答案信号
-    replay_requested = Signal()  # 请求重播当前例句
+    # Signal definition
+    exercise_completed = Signal()  # Exercise completion signal
+    next_exercise_requested = Signal()  # Request next exercise signal
+    hint_requested = Signal()  # Request hint signal
+    show_answer_requested = Signal()  # Request show answer signal
+    replay_requested = Signal()  # Request replay current sentence
     
     def __init__(self):
         super().__init__()
         self.current_exercise = None
-        self.blank_inputs = []  # 存储所有输入框
-        self._checking_answers = False  # 防止递归/重复检查
+        self.blank_inputs = []  # Store all input boxes
+        self._checking_answers = False  # Prevent recursive/duplicate checking
         self.setup_ui()
         self.setup_shortcuts()
     
@@ -267,16 +267,16 @@ class SubtitleExerciseWidget(QFrame):
             }
         """)
         
-        # 使用紧凑的主布局
+        # Use compact main layout
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(5, 5, 5, 5)  # 大幅减少边距
-        layout.setSpacing(5)  # 减少组件间距
+        layout.setContentsMargins(5, 5, 5, 5)  # Significantly reduce margins
+        layout.setSpacing(5)  # Reduce component spacing
         
-        # 紧凑的标题区域
+        # Compact title area
         title_layout = QHBoxLayout()
-        title_layout.setContentsMargins(5, 0, 5, 0)  # 减少标题区域边距
+        title_layout.setContentsMargins(5, 0, 5, 0)  # Reduce title area margins
         
-        self.title_label = QLabel("字幕练习区")
+        self.title_label = QLabel("Subtitle Exercise Area")
         self.title_label.setStyleSheet("""
             QLabel {
                 font-size: 18px;
@@ -291,7 +291,7 @@ class SubtitleExerciseWidget(QFrame):
         
         title_layout.addStretch()
         
-        # 进度显示
+        # Progress display
         self.progress_label = QLabel("")
         self.progress_label.setStyleSheet("""
             QLabel {
@@ -306,7 +306,7 @@ class SubtitleExerciseWidget(QFrame):
         
         layout.addLayout(title_layout)
         
-        # 字幕显示区域（滚动区域） - 最大化空间利用
+        # Subtitle display area (scroll area) - maximize space utilization
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)

@@ -1,6 +1,6 @@
 """
-主窗口模块
-实现应用程序的主界面和布局
+Main window module
+Implements the main interface and layout of the application
 """
 from PySide6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
                                QSplitter, QFrame, QLabel, QMenuBar, QToolBar, 
@@ -13,23 +13,23 @@ import os
 from config import config
 from favorites import ensure_favorites_dock, refresh_favorites_list, save_current_to_favorites
 
-# 导入视频播放器组件 - 这个类现在在video_player.py中定义
+# Import video player component - this class is now defined in video_player.py
 
-# 旧的组件类已被新的 SubtitleExerciseWidget 替代
+# Old component class has been replaced by new SubtitleExerciseWidget
 
 class MainWindow(QMainWindow):
-    """主窗口类"""
+    """Main window class"""
     
     def __init__(self):
         super().__init__()
-        self.subtitle_parser = None  # 字幕解析器
-        self.current_exercise_index = 0  # 当前练习索引
-        self.current_exercise_subtitle = None  # 当前练习字幕
-        self.exercise_mode = False  # 练习模式标志
-        self.generated_exercises = []  # AI生成的练习数据
-        # 自动保存进度相关
-        self.current_library_entry_id = None  # 当前关联的收藏条目ID
-        self._last_autosave_ts = 0  # 上次自动保存时间戳
+        self.subtitle_parser = None  # Subtitle parser
+        self.current_exercise_index = 0  # Current exercise index
+        self.current_exercise_subtitle = None  # Current exercise subtitle
+        self.exercise_mode = False  # Exercise mode flag
+        self.generated_exercises = []  # AI-generated exercise data
+        # Auto-save progress related
+        self.current_library_entry_id = None  # Current associated library entry ID
+        self._last_autosave_ts = 0  # Last auto-save timestamp
         self.setup_ui()
         self.setup_menu_bar()
         self.setup_toolbar()
@@ -37,19 +37,19 @@ class MainWindow(QMainWindow):
         self.load_settings()
     
     def setup_ui(self):
-        """设置用户界面"""
-        self.setWindowTitle("ListenFill AI - 个性化视频听力填空练习")
+        """Setup user interface"""
+        self.setWindowTitle("ListenFill AI - Personalized Video Listening Fill-in-the-Blank Exercise")
         
-        # 创建中央部件
+        # Create central widget
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
         
-        # 创建主布局 - 上下分布
+        # Create main layout - top and bottom distribution
         main_layout = QVBoxLayout(central_widget)
         main_layout.setContentsMargins(10, 10, 10, 10)
         main_layout.setSpacing(10)
         
-        # 上方区域：视频播放器
+        # Top area: video player
         video_container = QFrame()
         video_container.setFrameStyle(QFrame.StyledPanel)
         video_container.setStyleSheet("""
@@ -62,8 +62,8 @@ class MainWindow(QMainWindow):
         video_layout = QVBoxLayout(video_container)
         video_layout.setContentsMargins(0, 0, 0, 0)
         
-        # 视频区标题
-        video_title = QLabel("🎬 视频区")
+        # Video area title
+        video_title = QLabel("🎬 Video Area")
         video_title.setAlignment(Qt.AlignCenter)
         video_title.setStyleSheet("""
             QLabel {
@@ -77,7 +77,7 @@ class MainWindow(QMainWindow):
         """)
         video_layout.addWidget(video_title)
         
-        # 视频播放器
+        # Video player
         from video_player import VideoPlayerWidget
         self.video_widget = VideoPlayerWidget()
         self.video_widget.video_loaded.connect(self.on_video_loaded)
@@ -85,11 +85,11 @@ class MainWindow(QMainWindow):
         self.video_widget.playback_state_changed.connect(self.on_playback_state_changed)
         video_layout.addWidget(self.video_widget)
         
-        # 设置视频区域占主要空间
+        # Set video area to occupy main space
         video_container.setMinimumHeight(400)
-        main_layout.addWidget(video_container, 3)  # 权重为3
+        main_layout.addWidget(video_container, 3)  # Weight is 3
         
-        # 下方区域：字幕交互区
+        # Bottom area: subtitle interaction area
         from exercise_widget import SubtitleExerciseWidget
         self.exercise_widget = SubtitleExerciseWidget()
         self.exercise_widget.exercise_completed.connect(self.on_exercise_completed)
@@ -98,12 +98,12 @@ class MainWindow(QMainWindow):
         self.exercise_widget.show_answer_requested.connect(self.on_show_answer_requested)
         self.exercise_widget.replay_requested.connect(self.on_replay_requested)
         
-        # 设置字幕交互区域 - 优化空间分配
-        self.exercise_widget.setMinimumHeight(320)  # 增加最小高度以更好显示完整句子
-        main_layout.addWidget(self.exercise_widget, 1.2)  # 增加权重，给练习区更多空间
+        # Set subtitle interaction area - optimize space allocation
+        self.exercise_widget.setMinimumHeight(320)  # Increase minimum height to better display complete sentences
+        main_layout.addWidget(self.exercise_widget, 1.2)  # Increase weight to give exercise area more space
     
     def _ensure_min_blanks(self, exercises):
-        """确保每个AI练习至少包含一个挖空；若缺失则自动生成。"""
+        """Ensure each AI exercise contains at least one blank; generate automatically if missing."""
         import re, random
         for item in exercises or []:
             blanks = item.get('blanks') or []
@@ -132,7 +132,7 @@ class MainWindow(QMainWindow):
             }]
 
     def _ensure_exercise_has_blank(self, exercise_data):
-        """确保单条练习至少包含一个挖空（显示前的双保险）。"""
+        """Ensure single exercise contains at least one blank (double insurance before display)."""
         import re, random
         if not exercise_data:
             return exercise_data
@@ -159,142 +159,142 @@ class MainWindow(QMainWindow):
         return exercise_data
 
     def setup_menu_bar(self):
-        """设置菜单栏"""
+        """Setup menu bar"""
         menubar = self.menuBar()
         
-        # 文件菜单
-        file_menu = menubar.addMenu("文件(&F)")
+        # File menu
+        file_menu = menubar.addMenu("File(&F)")
         
-        # 导入视频和字幕
-        import_action = QAction("导入视频文件(&I)", self)
+        # Import video and subtitles
+        import_action = QAction("Import Video File(&I)", self)
         import_action.setShortcut(QKeySequence.Open)
-        import_action.setStatusTip("选择MP4视频文件")
+        import_action.setStatusTip("Select MP4 video file")
         import_action.triggered.connect(self.import_files)
         file_menu.addAction(import_action)
         
-        # 单独导入字幕
-        import_subtitle_action = QAction("导入字幕文件(&S)", self)
+        # Import subtitles separately
+        import_subtitle_action = QAction("Import Subtitle File(&S)", self)
         import_subtitle_action.setShortcut(QKeySequence("Ctrl+S"))
-        import_subtitle_action.setStatusTip("导入SRT字幕文件")
+        import_subtitle_action.setStatusTip("Import SRT subtitle file")
         import_subtitle_action.triggered.connect(self.import_subtitle)
         file_menu.addAction(import_subtitle_action)
         
         file_menu.addSeparator()
         
-        # 退出
-        exit_action = QAction("退出(&X)", self)
+        # Exit
+        exit_action = QAction("Exit(&X)", self)
         exit_action.setShortcut(QKeySequence.Quit)
-        exit_action.setStatusTip("退出应用程序")
+        exit_action.setStatusTip("Exit application")
         exit_action.triggered.connect(self.close)
         file_menu.addAction(exit_action)
         
-        # 设置菜单
-        settings_menu = menubar.addMenu("设置(&S)")
+        # Settings menu
+        settings_menu = menubar.addMenu("Settings(&S)")
         
-        # AI服务配置
-        ai_config_action = QAction("AI服务配置(&A)", self)
-        ai_config_action.setStatusTip("配置AI服务API密钥和模型")
+        # AI service configuration
+        ai_config_action = QAction("AI Service Configuration(&A)", self)
+        ai_config_action.setStatusTip("Configure AI service API key and model")
         ai_config_action.triggered.connect(self.show_ai_config)
         settings_menu.addAction(ai_config_action)
         
-        # 练习配置
-        exercise_config_action = QAction("练习配置(&E)", self)
-        exercise_config_action.setStatusTip("配置练习难度和挖空选项")
+        # Exercise configuration
+        exercise_config_action = QAction("Exercise Configuration(&E)", self)
+        exercise_config_action.setStatusTip("Configure exercise difficulty and blank options")
         exercise_config_action.triggered.connect(self.show_exercise_config)
         settings_menu.addAction(exercise_config_action)
         
         settings_menu.addSeparator()
         
-        # 开始练习
-        start_exercise_action = QAction("开始练习(&P)", self)
+        # Start exercise
+        start_exercise_action = QAction("Start Exercise(&P)", self)
         start_exercise_action.setShortcut(QKeySequence("F5"))
-        start_exercise_action.setStatusTip("开始听力填空练习")
+        start_exercise_action.setStatusTip("Start listening fill-in-the-blank exercise")
         start_exercise_action.triggered.connect(self.start_exercise_mode)
         settings_menu.addAction(start_exercise_action)
         
-        # 帮助菜单
-        help_menu = menubar.addMenu("帮助(&H)")
+        # Help menu
+        help_menu = menubar.addMenu("Help(&H)")
 
-        # 关于
-        about_action = QAction("关于(&A)", self)
-        about_action.setStatusTip("关于ListenFill AI")
+        # About
+        about_action = QAction("About(&A)", self)
+        about_action.setStatusTip("About ListenFill AI")
         about_action.triggered.connect(self.show_about)
         help_menu.addAction(about_action)
 
-        # 收藏菜单
-        fav_menu = menubar.addMenu("收藏(&C)")
+        # Favorites menu
+        fav_menu = menubar.addMenu("Favorites(&C)")
 
-        open_fav_action = QAction("打开收藏面板(&O)", self)
-        open_fav_action.setStatusTip("显示右侧收藏列表")
+        open_fav_action = QAction("Open Favorites Panel(&O)", self)
+        open_fav_action.setStatusTip("Show right-side favorites list")
         open_fav_action.triggered.connect(lambda: ensure_favorites_dock(self))
         fav_menu.addAction(open_fav_action)
 
-        save_fav_action = QAction("保存当前(&S)", self)
-        save_fav_action.setStatusTip("保存当前视频/字幕/练习到收藏")
+        save_fav_action = QAction("Save Current(&S)", self)
+        save_fav_action.setStatusTip("Save current video/subtitle/exercise to favorites")
         save_fav_action.triggered.connect(lambda: save_current_to_favorites(self))
         fav_menu.addAction(save_fav_action)
 
-        refresh_fav_action = QAction("刷新列表(&R)", self)
-        refresh_fav_action.setStatusTip("刷新收藏列表")
+        refresh_fav_action = QAction("Refresh List(&R)", self)
+        refresh_fav_action.setStatusTip("Refresh favorites list")
         refresh_fav_action.triggered.connect(lambda: refresh_favorites_list(self))
         fav_menu.addAction(refresh_fav_action)
     
     def setup_toolbar(self):
-        """设置工具栏"""
-        toolbar = QToolBar("主工具栏")
+        """Setup toolbar"""
+        toolbar = QToolBar("Main Toolbar")
         self.addToolBar(toolbar)
         toolbar.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
         
-        # 导入文件按钮
-        import_action = QAction("导入文件", self)
-        import_action.setStatusTip("导入视频和字幕文件")
+        # Import file button
+        import_action = QAction("Import Files", self)
+        import_action.setStatusTip("Import video and subtitle files")
         import_action.triggered.connect(self.import_files)
         toolbar.addAction(import_action)
         
         toolbar.addSeparator()
         
-        # AI配置按钮
-        ai_config_action = QAction("AI配置", self)
-        ai_config_action.setStatusTip("配置AI服务")
+        # AI configuration button
+        ai_config_action = QAction("AI Configuration", self)
+        ai_config_action.setStatusTip("Configure AI service")
         ai_config_action.triggered.connect(self.show_ai_config)
         toolbar.addAction(ai_config_action)
         
-        # 练习配置按钮
-        exercise_config_action = QAction("练习配置", self)
-        exercise_config_action.setStatusTip("配置练习选项")
+        # Exercise configuration button
+        exercise_config_action = QAction("Exercise Configuration", self)
+        exercise_config_action.setStatusTip("Configure exercise options")
         exercise_config_action.triggered.connect(self.show_exercise_config)
         toolbar.addAction(exercise_config_action)
     
     def setup_status_bar(self):
-        """设置状态栏"""
+        """Setup status bar"""
         self.status_bar = QStatusBar()
         self.setStatusBar(self.status_bar)
-        self.status_bar.showMessage("就绪 - 请导入视频和字幕文件开始练习")
+        self.status_bar.showMessage("Ready - Please import video and subtitle files to start exercise")
     
     def load_settings(self):
-        """加载设置"""
-        # 从配置中加载窗口大小
+        """Load settings"""
+        # Load window size from configuration
         width = config.get('ui.window_width', 1200)
         height = config.get('ui.window_height', 800)
         self.resize(width, height)
         
-        # 居中显示窗口
+        # Center window display
         self.center_window()
     
     def center_window(self):
-        """将窗口居中显示"""
+        """Center window display"""
         screen = self.screen().availableGeometry()
         window = self.frameGeometry()
         window.moveCenter(screen.center())
         self.move(window.topLeft())
     
     def closeEvent(self, event):
-        """窗口关闭事件"""
-        # 保存窗口大小到配置
+        """Window close event"""
+        # Save window size to configuration
         config.set('ui.window_width', self.width())
         config.set('ui.window_height', self.height())
         config.save_config()
-        # 关闭前保存一次进度
+        # Save progress once before closing
         try:
             self.autosave_progress(force=True)
         except Exception:
@@ -302,29 +302,29 @@ class MainWindow(QMainWindow):
         
         event.accept()
     
-    # 菜单和工具栏事件处理方法
+    # Menu and toolbar event handling methods
     def import_files(self):
-        """导入文件"""
-        # 选择视频文件
+        """Import files"""
+        # Select video file
         video_file, _ = QFileDialog.getOpenFileName(
             self,
-            "选择视频文件",
+            "Select Video File",
             "",
-            "视频文件 (*.mp4 *.avi *.mkv *.mov *.wmv *.flv);;所有文件 (*)"
+            "Video Files (*.mp4 *.avi *.mkv *.mov *.wmv *.flv);;All Files (*)"
         )
         
         if not video_file:
             return
         
-        # 加载视频
+        # Load video
         if self.video_widget.load_video(video_file):
-            self.status_bar.showMessage(f"视频已加载: {os.path.basename(video_file)}")
+            self.status_bar.showMessage(f"Video loaded: {os.path.basename(video_file)}")
             
-            # 询问是否导入字幕
+            # Ask whether to import subtitles
             reply = QMessageBox.question(
                 self, 
-                "导入字幕", 
-                "视频加载成功！\n\n是否要导入字幕文件？",
+                "Import Subtitles", 
+                "Video loaded successfully!\n\nDo you want to import subtitle file?",
                 QMessageBox.Yes | QMessageBox.No,
                 QMessageBox.Yes
             )
@@ -332,19 +332,19 @@ class MainWindow(QMainWindow):
             if reply == QMessageBox.Yes:
                 self.import_subtitle()
         else:
-            self.status_bar.showMessage("视频加载失败")
+            self.status_bar.showMessage("Video loading failed")
     
     def import_subtitle(self):
-        """导入字幕文件"""
+        """Import subtitle file"""
         from subtitle_import_dialog import SubtitleImportDialog
         
-        # 获取视频时长
+        # Get video duration
         video_duration = self.video_widget.get_duration()
         
         dialog = SubtitleImportDialog(self, video_duration)
         dialog.subtitle_loaded.connect(self.on_subtitle_loaded)
         
-        # 如果视频正在播放，传递当前时间给对话框
+        # If video is playing, pass current time to dialog
         if self.video_widget.is_playing():
             current_time = self.video_widget.get_current_position()
             dialog.set_current_time(current_time)
@@ -352,13 +352,13 @@ class MainWindow(QMainWindow):
         dialog.exec()
     
     def on_subtitle_loaded(self, subtitle_parser):
-        """字幕加载完成回调"""
-        print(f"[DEBUG] on_subtitle_loaded 被调用，字幕数量: {len(subtitle_parser.subtitles)}")
+        """Subtitle loading completion callback"""
+        print(f"[DEBUG] on_subtitle_loaded called, subtitle count: {len(subtitle_parser.subtitles)}")
         
-        # 保存字幕解析器引用
+        # Save subtitle parser reference
         self.subtitle_parser = subtitle_parser
 
-        # 如果库中已保存过该视频+字幕的AI练习，则自动加载，避免重复生成
+        # If AI exercises for this video+subtitle are already saved in library, auto-load to avoid regeneration
         try:
             from library import LibraryManager
             if getattr(self, 'library', None) is None:
@@ -371,11 +371,11 @@ class MainWindow(QMainWindow):
                 sabs = os.path.abspath(sub_path)
                 for e in self.library.get_entries():
                     if os.path.abspath(e.video_path) == vabs and os.path.abspath(e.subtitle_path) == sabs:
-                        # 记录当前收藏条目ID，启用自动保存
+                        # Record current library entry ID, enable auto-save
                         self.current_library_entry_id = e.id
                         if e.exercises:
                             self.generated_exercises = e.exercises
-                            self.status_bar.showMessage("已从收藏加载AI练习，无需重新生成")
+                            self.status_bar.showMessage("Loaded AI exercises from favorites, no need to regenerate")
                         break
         except Exception:
             # 忽略加载失败，保持正常流程
