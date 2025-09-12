@@ -86,7 +86,7 @@ def save_current_to_favorites(mw):
     except Exception:
         pass
 
-    mw.library.add_or_update_entry(
+    entry = mw.library.add_or_update_entry(
         video_path=video_file,
         subtitle_path=mw.subtitle_parser.current_file,
         time_offset_ms=mw.subtitle_parser.get_time_offset(),
@@ -95,6 +95,11 @@ def save_current_to_favorites(mw):
         resume_position_ms=resume_pos or 0,
         resume_exercise_index=resume_index or 0,
     )
+    # 记录当前收藏条目的ID，供自动保存进度使用
+    try:
+        mw.current_library_entry_id = entry.id
+    except Exception:
+        pass
     mw.status_bar.showMessage("已保存到收藏")
     refresh_favorites_list(mw)
 
@@ -196,6 +201,12 @@ def open_favorite_and_resume(mw, item: QListWidgetItem):
         mw.exercise_mode = True
         mw.play_current_subtitle()
         mw.status_bar.showMessage("已恢复到上次练习进度，并进入练习模式")
+    except Exception:
+        pass
+
+    # 标记当前打开的收藏条目ID，启用自动保存机制
+    try:
+        mw.current_library_entry_id = entry.id
     except Exception:
         pass
 

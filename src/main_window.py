@@ -27,6 +27,9 @@ class MainWindow(QMainWindow):
         self.current_exercise_subtitle = None  # 当前练习字幕
         self.exercise_mode = False  # 练习模式标志
         self.generated_exercises = []  # AI生成的练习数据
+        # 自动保存进度相关
+        self.current_library_entry_id = None  # 当前关联的收藏条目ID
+        self._last_autosave_ts = 0  # 上次自动保存时间戳
         self.setup_ui()
         self.setup_menu_bar()
         self.setup_toolbar()
@@ -291,6 +294,11 @@ class MainWindow(QMainWindow):
         config.set('ui.window_width', self.width())
         config.set('ui.window_height', self.height())
         config.save_config()
+        # 关闭前保存一次进度
+        try:
+            self.autosave_progress(force=True)
+        except Exception:
+            pass
         
         event.accept()
     
@@ -363,6 +371,8 @@ class MainWindow(QMainWindow):
                 sabs = os.path.abspath(sub_path)
                 for e in self.library.get_entries():
                     if os.path.abspath(e.video_path) == vabs and os.path.abspath(e.subtitle_path) == sabs:
+                        # 记录当前收藏条目ID，启用自动保存
+                        self.current_library_entry_id = e.id
                         if e.exercises:
                             self.generated_exercises = e.exercises
                             self.status_bar.showMessage("已从收藏加载AI练习，无需重新生成")
@@ -467,11 +477,24 @@ class MainWindow(QMainWindow):
             if position >= subtitle_end_time:
                 self.video_widget.media_player.pause()
                 self.show_current_exercise()
+        # 节流自动保存：每5秒保存一次当前位置
+        try:
+            import time
+            now = time.time()
+            if now - getattr(self, '_last_autosave_ts', 0) >= 5:
+                self.autosave_progress()
+                self._last_autosave_ts = now
+        except Exception:
+            pass
     
     def on_playback_state_changed(self, is_playing):
         """播放状态改变回调"""
-        # 可以在这里添加播放状态相关的逻辑
-        pass
+        # 暂停时立即保存一次进度
+        if not is_playing:
+            try:
+                self.autosave_progress()
+            except Exception:
+                pass
     
     def on_exercise_completed(self):
         """练习完成回调"""
@@ -605,9 +628,18 @@ class MainWindow(QMainWindow):
             self.exercise_widget.show_waiting_state()
             self.current_exercise_index = 0
             self.exercise_mode = False
+            try:
+                self.autosave_progress(force=True)
+            except Exception:
+                pass
             return
         
         self.play_current_subtitle()
+        # 进入下一句后保存当前进度（索引）
+        try:
+            self.autosave_progress()
+        except Exception:
+            pass
     
     def on_exercises_generated(self, exercises):
         """AI练习生成完成回调"""
@@ -631,3 +663,84 @@ class MainWindow(QMainWindow):
             self.current_exercise_index = 0
             self.exercise_mode = True
             self.play_current_subtitle()
+
+    # ---------------------- 自动保存进度 ----------------------
+    def _ensure_current_entry_id(self):
+        """若未明确当前收藏ID，尝试根据当前视频/字幕匹配已有收藏"""
+        try:
+            if getattr(self, 'current_library_entry_id', None):
+                return
+            from library import LibraryManager
+            if getattr(self, 'library', None) is None:
+                self.library = LibraryManager()
+            video_path = getattr(self.video_widget, 'current_video_file', None)
+            sub_path = getattr(self.subtitle_parser, 'current_file', None)
+            if not video_path or not sub_path:
+                return
+            import os
+            vabs = os.path.abspath(video_path)
+            sabs = os.path.abspath(sub_path)
+            for e in self.library.get_entries():
+                if os.path.abspath(e.video_path) == vabs and os.path.abspath(e.subtitle_path) == sabs:
+                    self.current_library_entry_id = e.id
+                    break
+        except Exception:
+            pass
+
+    def autosave_progress(self, force: bool = False):
+        """自动保存当前进度到收藏：位置与练习索引。
+        仅在当前视频/字幕已存在于收藏或已打开收藏时生效。
+        """
+        # 确保必要对象存在
+        if not getattr(self, 'video_widget', None) or not getattr(self, 'subtitle_parser', None):
+            return
+        # 尝试匹配当前收藏ID
+        self._ensure_current_entry_id()
+
+        # 仅在已有收藏条目时执行（避免未收藏时自动创建）
+        if not getattr(self, 'current_library_entry_id', None):
+            if not force:
+                return
+        try:
+            from library import LibraryManager
+            if getattr(self, 'library', None) is None:
+                self.library = LibraryManager()
+
+            video_file = getattr(self.video_widget, 'current_video_file', None)
+            subtitle_file = getattr(self.subtitle_parser, 'current_file', None)
+            if not video_file or not subtitle_file:
+                return
+
+            # 当前播放位置
+            try:
+                resume_pos = self.video_widget.get_current_position()
+            except Exception:
+                resume_pos = 0
+
+            # 当前练习索引（优先使用）或通过位置推断
+            resume_index = 0
+            try:
+                if getattr(self, 'current_exercise_index', None) is not None:
+                    resume_index = int(self.current_exercise_index)
+                if resume_index == 0 and resume_pos is not None and self.subtitle_parser:
+                    sub = self.subtitle_parser.get_subtitle_at_time(resume_pos)
+                    if sub:
+                        for i, s in enumerate(self.subtitle_parser.subtitles):
+                            if s.index == sub.index:
+                                resume_index = i
+                                break
+            except Exception:
+                pass
+
+            # 写入库（不改动已有练习与配置）
+            self.library.add_or_update_entry(
+                video_path=video_file,
+                subtitle_path=subtitle_file,
+                time_offset_ms=self.subtitle_parser.get_time_offset(),
+                exercises=None,
+                exercise_config=None,
+                resume_position_ms=resume_pos or 0,
+                resume_exercise_index=resume_index or 0,
+            )
+        except Exception:
+            pass
