@@ -36,7 +36,7 @@ class AITestThread(QThread):
             data = {
                 "model": self.model,
                 "messages": [
-                    {"role": "user", "content": "测试连接"}
+                    {"role": "user", "content": "Test connection"}
                 ],
                 "max_tokens": 10,
                 "temperature": 0.1
@@ -124,7 +124,7 @@ class AIConfigDialog(QDialog):
         self.timeout_spin = QSpinBox()
         self.timeout_spin.setRange(5, 120)
         self.timeout_spin.setValue(30)
-        self.timeout_spin.setSuffix(" 秒")
+        self.timeout_spin.setSuffix(" seconds")
         api_layout.addRow("Request Timeout:", self.timeout_spin)
         
         layout.addWidget(api_group)
@@ -189,14 +189,14 @@ class AIConfigDialog(QDialog):
         layout.addLayout(button_layout)
     
     def toggle_api_key_visibility(self, visible):
-        """切换API Key显示状态"""
+        """Toggle API Key visibility"""
         if visible:
             self.api_key_edit.setEchoMode(QLineEdit.Normal)
         else:
             self.api_key_edit.setEchoMode(QLineEdit.Password)
     
     def load_preset(self, preset_type):
-        """加载预设配置"""
+        """Load preset configuration"""
         presets = {
             "openai": {
                 "api_url": "https://api.openai.com/v1/chat/completions",
@@ -217,37 +217,37 @@ class AIConfigDialog(QDialog):
             self.api_url_edit.setText(preset["api_url"])
             self.model_combo.setCurrentText(preset["model"])
             
-            # 显示提示信息
+            # Show information message
             if preset_type == "azure":
-                QMessageBox.information(self, "提示", 
-                    "Azure OpenAI配置需要修改URL中的resource名称和deployment名称")
+                QMessageBox.information(self, "Information", 
+                    "Azure OpenAI configuration requires modifying the resource name and deployment name in the URL")
             elif preset_type == "claude":
-                QMessageBox.information(self, "提示", 
-                    "Claude API使用不同的请求格式，请确保您的API密钥正确")
+                QMessageBox.information(self, "Information", 
+                    "Claude API uses a different request format, please ensure your API key is correct")
     
     def test_connection(self):
-        """测试API连接"""
-        # 验证输入
+        """Test API connection"""
+        # Validate input
         if not self.api_key_edit.text().strip():
-            QMessageBox.warning(self, "警告", "请输入API Key")
+            QMessageBox.warning(self, "Warning", "Please enter API Key")
             return
         
         if not self.api_url_edit.text().strip():
-            QMessageBox.warning(self, "警告", "请输入API URL")
+            QMessageBox.warning(self, "Warning", "Please enter API URL")
             return
         
         if not self.model_combo.currentText().strip():
-            QMessageBox.warning(self, "警告", "请选择AI模型")
+            QMessageBox.warning(self, "Warning", "Please select AI model")
             return
         
-        # 开始测试
+        # Start test
         self.test_button.setEnabled(False)
         self.progress_bar.setVisible(True)
-        self.progress_bar.setRange(0, 0)  # 无限进度条
+        self.progress_bar.setRange(0, 0)  # Indeterminate progress bar
         self.result_text.clear()
-        self.result_text.append("正在测试连接...")
+        self.result_text.append("Testing connection...")
         
-        # 创建并启动测试线程
+        # Create and start test thread
         self.test_thread = AITestThread(
             self.api_key_edit.text().strip(),
             self.api_url_edit.text().strip(),
@@ -257,7 +257,7 @@ class AIConfigDialog(QDialog):
         self.test_thread.start()
     
     def on_test_completed(self, success, message):
-        """测试完成回调"""
+        """Test completion callback"""
         self.test_button.setEnabled(True)
         self.progress_bar.setVisible(False)
         
@@ -268,13 +268,13 @@ class AIConfigDialog(QDialog):
             self.result_text.setStyleSheet("QTextEdit { color: red; }")
             self.result_text.setText(f"✗ {message}")
         
-        # 清理线程
+        # Clean up thread
         if self.test_thread:
             self.test_thread.deleteLater()
             self.test_thread = None
     
     def load_config(self):
-        """加载当前配置"""
+        """Load current configuration"""
         ai_config = config.get_ai_config()
         
         self.api_key_edit.setText(ai_config.get('api_key', ''))
@@ -283,21 +283,21 @@ class AIConfigDialog(QDialog):
         self.timeout_spin.setValue(ai_config.get('timeout', 30))
     
     def save_config(self):
-        """保存配置"""
-        # 验证输入
+        """Save configuration"""
+        # Validate input
         if not self.api_key_edit.text().strip():
-            QMessageBox.warning(self, "警告", "请输入API Key")
+            QMessageBox.warning(self, "Warning", "Please enter API Key")
             return
         
         if not self.api_url_edit.text().strip():
-            QMessageBox.warning(self, "警告", "请输入API URL")
+            QMessageBox.warning(self, "Warning", "Please enter API URL")
             return
         
         if not self.model_combo.currentText().strip():
-            QMessageBox.warning(self, "警告", "请选择AI模型")
+            QMessageBox.warning(self, "Warning", "Please select AI model")
             return
         
-        # 保存配置
+        # Save configuration
         config.set_ai_config(
             self.api_key_edit.text().strip(),
             self.api_url_edit.text().strip(),
@@ -306,14 +306,14 @@ class AIConfigDialog(QDialog):
         config.set('ai_service.timeout', self.timeout_spin.value())
         
         if config.save_config():
-            QMessageBox.information(self, "成功", "AI服务配置已保存")
+            QMessageBox.information(self, "Success", "AI service configuration saved")
             self.accept()
         else:
-            QMessageBox.critical(self, "错误", "配置保存失败")
+            QMessageBox.critical(self, "Error", "Configuration save failed")
     
     def closeEvent(self, event):
-        """关闭事件"""
-        # 如果测试线程正在运行，先停止它
+        """Close event"""
+        # If test thread is running, stop it first
         if self.test_thread and self.test_thread.isRunning():
             self.test_thread.terminate()
             self.test_thread.wait()

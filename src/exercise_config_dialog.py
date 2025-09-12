@@ -40,19 +40,19 @@ class ExerciseConfigDialog(QDialog):
         
         self.language_combo = QComboBox()
         self.language_combo.addItems([
-            "English (英语)",
-            "Spanish (西班牙语)",
-            "French (法语)",
-            "German (德语)",
-            "Italian (意大利语)",
-            "Portuguese (葡萄牙语)",
-            "Russian (俄语)",
-            "Japanese (日语)",
-            "Korean (韩语)",
-            "Chinese (中文)",
-            "Other (其他)"
+            "English",
+            "Spanish",
+            "French",
+            "German",
+            "Italian",
+            "Portuguese",
+            "Russian",
+            "Japanese",
+            "Korean",
+            "Chinese",
+            "Other"
         ])
-        self.language_combo.setCurrentText("English (英语)")
+        self.language_combo.setCurrentText("English")
         language_layout.addRow("Learning Language:", self.language_combo)
         
         # Language description
@@ -71,11 +71,11 @@ class ExerciseConfigDialog(QDialog):
         
         self.level_combo = QComboBox()
         self.level_combo.addItems([
-            "A1-A2 (初级)",
-            "B1-B2 (中级)", 
-            "C1-C2 (高级)"
+            "A1-A2 (Beginner)",
+            "B1-B2 (Intermediate)", 
+            "C1-C2 (Advanced)"
         ])
-        self.level_combo.setCurrentText("B1-B2 (中级)")
+        self.level_combo.setCurrentText("B1-B2 (Intermediate)")
         level_layout.addRow("Language Level:", self.level_combo)
         
         # Level description
@@ -303,7 +303,7 @@ class ExerciseConfigDialog(QDialog):
                 break
         
         # Set blank focus areas
-        focus_areas = exercise_config.get('focus_areas', ['名词', '动词'])
+        focus_areas = exercise_config.get('focus_areas', ['nouns', 'verbs'])
         
         self.noun_check.setChecked('nouns' in focus_areas)
         self.verb_check.setChecked('verbs' in focus_areas)
