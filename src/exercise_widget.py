@@ -185,7 +185,6 @@ class BlankInputWidget(QLineEdit):
                 background-color: #e8f5e8;
                 color: #2e7d32;
                 margin: 2px 4px;
-                box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
             }
         """)
     
@@ -202,7 +201,6 @@ class BlankInputWidget(QLineEdit):
                 background-color: #ffebee;
                 color: #c62828;
                 margin: 2px 4px;
-                box-shadow: 0 2px 8px rgba(244, 67, 54, 0.2);
             }
         """)
     
@@ -224,7 +222,6 @@ class BlankInputWidget(QLineEdit):
             QLineEdit:focus {
                 border-color: #2196f3;
                 background-color: #ffffff;
-                box-shadow: 0 2px 8px rgba(33, 150, 243, 0.2);
                 outline: none;
             }
             QLineEdit:hover {
@@ -643,7 +640,6 @@ class SubtitleExerciseWidget(QFrame):
             }
             QWidget:hover {
                 border-color: #2196f3;
-                box-shadow: 0 4px 12px rgba(33, 150, 243, 0.15);
             }
         """)
         

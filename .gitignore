@@ -65,7 +65,7 @@ coverage.xml
 .hypothesis/
 
 # 用户生成的内容 (可选择性忽略)
-# data/
+data/
 # test_*.srt
 # *.mp4
 # *.avi
