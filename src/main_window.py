@@ -378,72 +378,72 @@ class MainWindow(QMainWindow):
                             self.status_bar.showMessage("Loaded AI exercises from favorites, no need to regenerate")
                         break
         except Exception:
-            # 忽略加载失败，保持正常流程
+            # Ignore loading failure, maintain normal flow
             pass
         
-        # 在练习组件中显示字幕加载成功的提示
-        print("[DEBUG] 准备调用 show_subtitle_loaded_state")
+        # Show subtitle loading success prompt in exercise component
+        print("[DEBUG] Preparing to call show_subtitle_loaded_state")
         self.show_subtitle_loaded_state()
         
-        # 强制刷新界面
+        # Force refresh interface
         self.exercise_widget.update()
         self.exercise_widget.repaint()
         self.update()
         
-        self.status_bar.showMessage(f"字幕已加载: {len(subtitle_parser.subtitles)} 条")
+        self.status_bar.showMessage(f"Subtitles loaded: {len(subtitle_parser.subtitles)} items")
         
-        # 注意：我们把 QMessageBox 移到最后，因为它是阻塞的
-        print("[DEBUG] 准备显示成功对话框")
-        QMessageBox.information(self, "成功", 
-                               f"字幕导入成功！\n\n"
-                               f"共导入 {len(subtitle_parser.subtitles)} 条字幕\n"
-                               f"时间偏移: {subtitle_parser.get_time_offset()/1000:.1f} 秒\n\n"
-                               f"现在可以开始练习了！")
-        print("[DEBUG] 成功对话框已显示")
+        # Note: We move QMessageBox to the end because it is blocking
+        print("[DEBUG] Preparing to show success dialog")
+        QMessageBox.information(self, "Success", 
+                               f"Subtitle import successful!\n\n"
+                               f"Total imported {len(subtitle_parser.subtitles)} subtitles\n"
+                               f"Time offset: {subtitle_parser.get_time_offset()/1000:.1f} seconds\n\n"
+                               f"Now you can start exercising!")
+        print("[DEBUG] Success dialog displayed")
     
     def show_subtitle_loaded_state(self):
-        """显示字幕加载成功状态"""
-        print("[DEBUG] show_subtitle_loaded_state 被调用")
+        """Show subtitle loading success state"""
+        print("[DEBUG] show_subtitle_loaded_state called")
         
         if not self.subtitle_parser:
-            print("[DEBUG] subtitle_parser 为空，返回")
+            print("[DEBUG] subtitle_parser is empty, returning")
             return
         
         if not hasattr(self, 'exercise_widget') or not self.exercise_widget:
-            print("[DEBUG] exercise_widget 不存在，返回")
+            print("[DEBUG] exercise_widget does not exist, returning")
             return
             
-        print(f"[DEBUG] 字幕数量: {len(self.subtitle_parser.subtitles)}")
+        print(f"[DEBUG] Subtitle count: {len(self.subtitle_parser.subtitles)}")
         
-        # 创建临时的显示数据
+        # Create temporary display data
         display_data = {
-            'original_text': f"✅ 字幕已成功加载！\n\n共 {len(self.subtitle_parser.subtitles)} 条字幕\n\n请点击菜单 '设置' → '练习配置' 生成AI练习，\n或按 F5 开始练习模式",
-            'blanks': [],  # 没有挖空
+            'original_text': f"✅ Subtitles successfully loaded!\n\nTotal {len(self.subtitle_parser.subtitles)} subtitles\n\nClick menu 'Settings' → 'Exercise Configuration' to generate AI exercises,\nor press F5 to start exercise mode",
+            'blanks': [],  # No blanks
             'current': 0,
             'total': len(self.subtitle_parser.subtitles)
         }
         
-        print(f"[DEBUG] 准备显示数据: {display_data}")
+        print(f"[DEBUG] Preparing to display data: {display_data}")
         
         try:
-            # 显示到练习组件
+            # Display to exercise component
             self.exercise_widget.show_subtitle_loaded(display_data)
-            print("[DEBUG] 成功调用 exercise_widget.show_subtitle_loaded")
+            print("[DEBUG] Successfully called exercise_widget.show_subtitle_loaded")
         except Exception as e:
-            print(f"[DEBUG] 调用 show_subtitle_loaded 时出错: {e}")
+            print(f"[DEBUG] Error calling show_subtitle_loaded: {e}")
             import traceback
             traceback.print_exc()
     
     def show_ai_config(self):
-        """显示AI配置对话框"""
+        """Show AI configuration dialog"""
         from ai_config_dialog import AIConfigDialog
         dialog = AIConfigDialog(self)
         dialog.exec()
     
     def show_exercise_config(self):
-        """显示练习配置对话框"""
+        """Show exercise configuration dialog"""
         if not self.subtitle_parser or not self.subtitle_parser.subtitles:
-            QMessageBox.warning(self, "警告", "请先导入字幕文件")
+            QMessageBox.warning(self, "Warning", "Please import subtitle file first")
             return
         
         from exercise_config_dialog import ExerciseConfigDialog
@@ -452,32 +452,32 @@ class MainWindow(QMainWindow):
         dialog.exec()
     
     def show_about(self):
-        """显示关于对话框"""
-        QMessageBox.about(self, "关于ListenFill AI", 
+        """Show about dialog"""
+        QMessageBox.about(self, "About ListenFill AI", 
                          "ListenFill AI v1.0\n\n"
-                         "个性化视频听力填空练习应用\n"
-                         "基于AI技术的智能挖空生成\n\n"
-                         "开发中...")
+                         "Personalized video listening fill-in-the-blank exercise application\n"
+                         "AI-powered intelligent blank generation\n\n"
+                         "Under development...")
     
-    # 视频播放器事件处理
+    # Video player event handling
     def on_video_loaded(self, video_path):
-        """视频加载完成回调"""
+        """Video loading completion callback"""
         video_name = os.path.basename(video_path)
         self.setWindowTitle(f"ListenFill AI - {video_name}")
-        self.status_bar.showMessage(f"已加载: {video_name}")
+        self.status_bar.showMessage(f"Loaded: {video_name}")
     
     def on_position_changed(self, position):
-        """播放位置改变回调"""
-        # 在练习模式下，检查是否需要暂停
+        """Playback position change callback"""
+        # In exercise mode, check if pause is needed
         if hasattr(self, 'current_exercise_subtitle') and self.current_exercise_subtitle:
             subtitle_end_time = (self.current_exercise_subtitle.end_time + 
                                self.subtitle_parser.get_time_offset())
             
-            # 如果播放到字幕结束时间，自动暂停
+            # If playing to subtitle end time, auto-pause
             if position >= subtitle_end_time:
                 self.video_widget.media_player.pause()
                 self.show_current_exercise()
-        # 节流自动保存：每5秒保存一次当前位置
+        # Throttle auto-save: save current position every 5 seconds
         try:
             import time
             now = time.time()
@@ -488,8 +488,8 @@ class MainWindow(QMainWindow):
             pass
     
     def on_playback_state_changed(self, is_playing):
-        """播放状态改变回调"""
-        # 暂停时立即保存一次进度
+        """Playback state change callback"""
+        # Save progress immediately when paused
         if not is_playing:
             try:
                 self.autosave_progress()
@@ -497,45 +497,45 @@ class MainWindow(QMainWindow):
                 pass
     
     def on_exercise_completed(self):
-        """练习完成回调"""
-        self.status_bar.showMessage("练习完成！")
+        """Exercise completion callback"""
+        self.status_bar.showMessage("Exercise completed!")
     
     def on_next_exercise_requested(self):
-        """请求下一个练习回调"""
+        """Request next exercise callback"""
         self.play_next_subtitle()
     
     def on_hint_requested(self):
-        """请求提示回调"""
-        self.status_bar.showMessage("提示功能将在AI集成后实现")
+        """Request hint callback"""
+        self.status_bar.showMessage("Hint feature will be implemented after AI integration")
     
     def on_show_answer_requested(self):
-        """请求显示答案回调"""
-        self.status_bar.showMessage("已显示答案")
+        """Request show answer callback"""
+        self.status_bar.showMessage("Answer displayed")
     
     def on_replay_requested(self):
-        """重播当前例句"""
+        """Replay current sentence"""
         if self.current_exercise_subtitle and self.subtitle_parser:
             start_time = self.current_exercise_subtitle.start_time + self.subtitle_parser.get_time_offset()
             self.video_widget.set_position(start_time)
             self.video_widget.media_player.play()
-            self.status_bar.showMessage("重播当前例句")
+            self.status_bar.showMessage("Replaying current sentence")
         else:
-            self.status_bar.showMessage("暂无可重播的例句")
+            self.status_bar.showMessage("No sentence available for replay")
 
-    # 练习逻辑方法
+    # Exercise logic methods
     def start_exercise_mode(self):
-        """开始练习模式"""
+        """Start exercise mode"""
         if not self.subtitle_parser or not self.subtitle_parser.subtitles:
-            QMessageBox.warning(self, "警告", "请先导入字幕文件")
+            QMessageBox.warning(self, "Warning", "Please import subtitle file first")
             return
         
-        # 检查是否已生成练习
+        # Check if exercises have been generated
         if not self.generated_exercises:
             reply = QMessageBox.question(
                 self,
-                "生成练习",
-                "尚未生成AI练习。是否现在生成？\n\n"
-                "点击'是'将打开练习配置对话框",
+                "Generate Exercise",
+                "AI exercises not yet generated. Generate now?\n\n"
+                "Click 'Yes' to open exercise configuration dialog",
                 QMessageBox.Yes | QMessageBox.No,
                 QMessageBox.Yes
             )
@@ -544,46 +544,46 @@ class MainWindow(QMainWindow):
                 self.show_exercise_config()
             return
         
-        # 开始练习模式
+        # Start exercise mode
         self.current_exercise_index = 0
         self.exercise_mode = True
         self.play_current_subtitle()
     
     def play_current_subtitle(self):
-        """播放当前字幕"""
+        """Play current subtitle"""
         if not self.subtitle_parser or self.current_exercise_index >= len(self.subtitle_parser.subtitles):
             return
         
         subtitle = self.subtitle_parser.subtitles[self.current_exercise_index]
         self.current_exercise_subtitle = subtitle
         
-        # 定位到字幕开始时间
+        # Position to subtitle start time
         start_time = subtitle.start_time + self.subtitle_parser.get_time_offset()
         self.video_widget.set_position(start_time)
         self.video_widget.media_player.play()
     
     def show_current_exercise(self):
-        """显示当前练习"""
+        """Show current exercise"""
         if not self.current_exercise_subtitle:
-            print("[DEBUG] show_current_exercise: 没有当前练习字幕")
+            print("[DEBUG] show_current_exercise: No current exercise subtitle")
             return
         
-        # 使用AI生成的练习数据或备用方案
+        # Use AI-generated exercise data or fallback
         if self.generated_exercises and self.current_exercise_index < len(self.generated_exercises):
             exercise_data = self.generated_exercises[self.current_exercise_index]
-            print(f"[DEBUG] 使用AI生成的练习数据: {exercise_data}")
+            print(f"[DEBUG] Using AI-generated exercise data: {exercise_data}")
         else:
-            # 备用方案：创建模拟练习数据
+            # Fallback: create mock exercise data
             exercise_data = self.create_mock_exercise(self.current_exercise_subtitle)
-            print(f"[DEBUG] 使用备用练习数据: {exercise_data}")
+            print(f"[DEBUG] Using fallback exercise data: {exercise_data}")
         
-        print(f"[DEBUG] 当前练习索引: {self.current_exercise_index}")
-        print(f"[DEBUG] 生成的练习总数: {len(self.generated_exercises) if self.generated_exercises else 0}")
+        print(f"[DEBUG] Current exercise index: {self.current_exercise_index}")
+        print(f"[DEBUG] Total generated exercises: {len(self.generated_exercises) if self.generated_exercises else 0}")
         
         self.exercise_widget.show_exercise(exercise_data)
     
     def create_mock_exercise(self, subtitle):
-        """创建模拟练习数据 (临时方法)"""
+        """Create mock exercise data (temporary method)"""
         import random
         
         words = subtitle.text.split()
@@ -595,7 +595,7 @@ class MainWindow(QMainWindow):
                 'total': len(self.subtitle_parser.subtitles)
             }
         
-        # 随机选择1-2个词进行挖空
+        # Randomly select 1-2 words for blanking
         num_blanks = min(2, len(words) // 3 + 1)
         blank_positions = random.sample(range(len(words)), min(num_blanks, len(words)))
         
@@ -615,16 +615,16 @@ class MainWindow(QMainWindow):
         }
     
     def play_next_subtitle(self):
-        """播放下一句字幕"""
+        """Play next subtitle"""
         self.current_exercise_index += 1
         
-        # 检查练习数据的长度
+        # Check exercise data length
         max_exercises = len(self.generated_exercises) if self.generated_exercises else len(self.subtitle_parser.subtitles)
         
         if self.current_exercise_index >= max_exercises:
-            # 练习结束
-            QMessageBox.information(self, "完成", "🎉 恭喜！所有练习已完成！\n\n"
-                                   f"共完成 {max_exercises} 个练习")
+            # Exercise ended
+            QMessageBox.information(self, "Complete", "🎉 Congratulations! All exercises completed!\n\n"
+                                   f"Total completed {max_exercises} exercises")
             self.exercise_widget.show_waiting_state()
             self.current_exercise_index = 0
             self.exercise_mode = False
@@ -635,26 +635,26 @@ class MainWindow(QMainWindow):
             return
         
         self.play_current_subtitle()
-        # 进入下一句后保存当前进度（索引）
+        # Save current progress (index) after entering next sentence
         try:
             self.autosave_progress()
         except Exception:
             pass
     
     def on_exercises_generated(self, exercises):
-        """AI练习生成完成回调"""
-        # 确保每个练习至少有一个挖空（修正AI漏挖）
+        """AI exercise generation completion callback"""
+        # Ensure each exercise has at least one blank (fix AI missing blanks)
         self._ensure_min_blanks(exercises)
         self.generated_exercises = exercises
-        self.status_bar.showMessage(f"AI练习生成完成: {len(exercises)} 个练习")
+        self.status_bar.showMessage(f"AI exercise generation completed: {len(exercises)} exercises")
         
-        # 询问是否立即开始练习
+        # Ask if to start exercise immediately
         reply = QMessageBox.question(
             self,
-            "练习已生成",
-            f"AI练习生成完成！\n\n"
-            f"共生成 {len(exercises)} 个个性化练习\n"
-            f"是否立即开始练习？",
+            "Exercise Generated",
+            f"AI exercise generation completed!\n\n"
+            f"Total generated {len(exercises)} personalized exercises\n"
+            f"Start exercise immediately?",
             QMessageBox.Yes | QMessageBox.No,
             QMessageBox.Yes
         )
@@ -664,9 +664,9 @@ class MainWindow(QMainWindow):
             self.exercise_mode = True
             self.play_current_subtitle()
 
-    # ---------------------- 自动保存进度 ----------------------
+    # ---------------------- Auto-save Progress ----------------------
     def _ensure_current_entry_id(self):
-        """若未明确当前收藏ID，尝试根据当前视频/字幕匹配已有收藏"""
+        """If current favorite ID is not clear, try to match existing favorites based on current video/subtitle"""
         try:
             if getattr(self, 'current_library_entry_id', None):
                 return
@@ -688,16 +688,16 @@ class MainWindow(QMainWindow):
             pass
 
     def autosave_progress(self, force: bool = False):
-        """自动保存当前进度到收藏：位置与练习索引。
-        仅在当前视频/字幕已存在于收藏或已打开收藏时生效。
+        """Auto-save current progress to favorites: position and exercise index.
+        Only effective when current video/subtitle already exists in favorites or favorites is open.
         """
-        # 确保必要对象存在
+        # Ensure necessary objects exist
         if not getattr(self, 'video_widget', None) or not getattr(self, 'subtitle_parser', None):
             return
-        # 尝试匹配当前收藏ID
+        # Try to match current favorite ID
         self._ensure_current_entry_id()
 
-        # 仅在已有收藏条目时执行（避免未收藏时自动创建）
+        # Only execute when favorite entry already exists (avoid auto-creation when not favorited)
         if not getattr(self, 'current_library_entry_id', None):
             if not force:
                 return
@@ -711,13 +711,13 @@ class MainWindow(QMainWindow):
             if not video_file or not subtitle_file:
                 return
 
-            # 当前播放位置
+            # Current playback position
             try:
                 resume_pos = self.video_widget.get_current_position()
             except Exception:
                 resume_pos = 0
 
-            # 当前练习索引（优先使用）或通过位置推断
+            # Current exercise index (preferred) or inferred from position
             resume_index = 0
             try:
                 if getattr(self, 'current_exercise_index', None) is not None:
@@ -732,7 +732,7 @@ class MainWindow(QMainWindow):
             except Exception:
                 pass
 
-            # 写入库（不改动已有练习与配置）
+            # Write to library (without modifying existing exercises and configuration)
             self.library.add_or_update_entry(
                 video_path=video_file,
                 subtitle_path=subtitle_file,

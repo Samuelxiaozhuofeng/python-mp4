@@ -87,7 +87,7 @@ class LibraryManager:
         eid = self._make_id(video_path, subtitle_path)
         now = time.time()
 
-        # 查找是否存在
+        # Check if exists
         found = None
         for e in self._data.get("entries", []):
             if e.get("id") == eid:

@@ -111,26 +111,26 @@ class SubtitleParser(QObject):
             return False
     
     def _time_to_milliseconds(self, time_obj) -> int:
-        """将pysrt时间对象转换为毫秒"""
+        """Convert pysrt time object to milliseconds"""
         return (time_obj.hours * 3600 + 
                 time_obj.minutes * 60 + 
                 time_obj.seconds) * 1000 + time_obj.milliseconds
     
     def _clean_text(self, text: str) -> str:
-        """清理字幕文本"""
-        # 移除HTML标签
+        """Clean subtitle text"""
+        # Remove HTML tags
         text = re.sub(r'<[^>]+>', '', text)
         
-        # 移除多余的空白字符
+        # Remove extra whitespace
         text = re.sub(r'\s+', ' ', text)
         
-        # 移除首尾空白
+        # Remove leading and trailing whitespace
         text = text.strip()
         
         return text
     
     def get_subtitle_at_time(self, time_ms: int) -> Optional[SubtitleItem]:
-        """获取指定时间点的字幕"""
+        """Get subtitle at specified time point"""
         adjusted_time = time_ms - self.time_offset
         
         for subtitle in self.subtitles:
@@ -140,13 +140,13 @@ class SubtitleParser(QObject):
         return None
     
     def get_subtitles_in_range(self, start_ms: int, end_ms: int) -> List[SubtitleItem]:
-        """获取指定时间范围内的字幕"""
+        """Get subtitles within specified time range"""
         result = []
         adjusted_start = start_ms - self.time_offset
         adjusted_end = end_ms - self.time_offset
         
         for subtitle in self.subtitles:
-            # 检查字幕是否与时间范围有重叠
+            # Check if subtitle overlaps with time range
             if (subtitle.start_time <= adjusted_end and 
                 subtitle.end_time >= adjusted_start):
                 result.append(subtitle)
@@ -154,32 +154,32 @@ class SubtitleParser(QObject):
         return result
     
     def set_time_offset(self, offset_ms: int):
-        """设置时间偏移量"""
+        """Set time offset"""
         self.time_offset = offset_ms
     
     def get_time_offset(self) -> int:
-        """获取当前时间偏移量"""
+        """Get current time offset"""
         return self.time_offset
     
     def validate_timing(self, video_duration_ms: int) -> Dict[str, any]:
-        """验证字幕时间是否合理"""
+        """Validate subtitle timing"""
         if not self.subtitles:
             return {
                 'valid': False,
-                'issues': ['没有字幕数据'],
+                'issues': ['No subtitle data'],
                 'suggestions': []
             }
         
         issues = []
         suggestions = []
         
-        # 检查字幕是否超出视频时长
+        # Check if subtitles exceed video duration
         last_subtitle = max(self.subtitles, key=lambda x: x.end_time)
         if last_subtitle.end_time > video_duration_ms:
-            issues.append(f"字幕结束时间({self._ms_to_time_string(last_subtitle.end_time)}) 超出视频时长({self._ms_to_time_string(video_duration_ms)})")
-            suggestions.append("考虑调整字幕时间偏移")
+            issues.append(f"Subtitle end time ({self._ms_to_time_string(last_subtitle.end_time)}) exceeds video duration ({self._ms_to_time_string(video_duration_ms)})")
+            suggestions.append("Consider adjusting subtitle time offset")
         
-        # 检查字幕间隔
+        # Check subtitle intervals
         overlapping_count = 0
         gap_issues = 0
         
@@ -187,31 +187,31 @@ class SubtitleParser(QObject):
             current = self.subtitles[i]
             next_sub = self.subtitles[i + 1]
             
-            # 检查重叠
+            # Check for overlap
             if current.end_time > next_sub.start_time:
                 overlapping_count += 1
             
-            # 检查间隔过大
+            # Check for large gaps
             gap = next_sub.start_time - current.end_time
-            if gap > 5000:  # 5秒
+            if gap > 5000:  # 5 seconds
                 gap_issues += 1
         
         if overlapping_count > 0:
-            issues.append(f"发现 {overlapping_count} 处字幕时间重叠")
+            issues.append(f"Found {overlapping_count} subtitle time overlaps")
         
-        if gap_issues > len(self.subtitles) * 0.3:  # 超过30%的间隔过大
-            issues.append(f"发现 {gap_issues} 处字幕间隔过大")
-            suggestions.append("检查字幕与视频的同步性")
+        if gap_issues > len(self.subtitles) * 0.3:  # More than 30% have large gaps
+            issues.append(f"Found {gap_issues} subtitle intervals too large")
+            suggestions.append("Check subtitle and video synchronization")
         
-        # 检查字幕长度
-        too_short = sum(1 for s in self.subtitles if s.duration < 500)  # 0.5秒
-        too_long = sum(1 for s in self.subtitles if s.duration > 10000)  # 10秒
+        # Check subtitle length
+        too_short = sum(1 for s in self.subtitles if s.duration < 500)  # 0.5 seconds
+        too_long = sum(1 for s in self.subtitles if s.duration > 10000)  # 10 seconds
         
         if too_short > 0:
-            issues.append(f"{too_short} 条字幕持续时间过短")
+            issues.append(f"{too_short} subtitles have too short duration")
         
         if too_long > 0:
-            issues.append(f"{too_long} 条字幕持续时间过长")
+            issues.append(f"{too_long} subtitles have too long duration")
         
         return {
             'valid': len(issues) == 0,
@@ -227,7 +227,7 @@ class SubtitleParser(QObject):
         }
     
     def _ms_to_time_string(self, ms: int) -> str:
-        """将毫秒转换为时间字符串"""
+        """Convert milliseconds to time string"""
         seconds = ms // 1000
         minutes = seconds // 60
         hours = minutes // 60
@@ -235,7 +235,7 @@ class SubtitleParser(QObject):
         return f"{hours:02d}:{minutes%60:02d}:{seconds%60:02d}"
     
     def get_subtitle_stats(self) -> Dict[str, any]:
-        """获取字幕统计信息"""
+        """Get subtitle statistics"""
         if not self.subtitles:
             return {}
         
@@ -257,7 +257,7 @@ class SubtitleParser(QObject):
         }
     
     def export_adjusted_srt(self, output_path: str) -> bool:
-        """导出调整后的SRT文件"""
+        """Export adjusted SRT file"""
         if not self.subtitles:
             return False
         
@@ -265,11 +265,11 @@ class SubtitleParser(QObject):
             srt_file = pysrt.SubRipFile()
             
             for subtitle in self.subtitles:
-                # 应用时间偏移
+                # Apply time offset
                 adjusted_start = subtitle.start_time + self.time_offset
                 adjusted_end = subtitle.end_time + self.time_offset
                 
-                # 转换回pysrt时间格式
+                # Convert back to pysrt time format
                 start_time = self._milliseconds_to_time(adjusted_start)
                 end_time = self._milliseconds_to_time(adjusted_end)
                 
@@ -286,11 +286,11 @@ class SubtitleParser(QObject):
             return True
             
         except Exception as e:
-            print(f"导出SRT文件失败: {e}")
+            print(f"Failed to export SRT file: {e}")
             return False
     
     def _milliseconds_to_time(self, ms: int):
-        """将毫秒转换为pysrt时间对象"""
+        """Convert milliseconds to pysrt time object"""
         hours = ms // 3600000
         minutes = (ms % 3600000) // 60000
         seconds = (ms % 60000) // 1000
@@ -299,7 +299,7 @@ class SubtitleParser(QObject):
         return pysrt.SubRipTime(hours, minutes, seconds, milliseconds)
     
     def clear(self):
-        """清除当前字幕数据"""
+        """Clear current subtitle data"""
         self.subtitles = []
         self.current_file = None
         self.time_offset = 0

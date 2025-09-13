@@ -67,7 +67,7 @@ class SubtitlePreviewWidget(QFrame):
         """Update subtitle list"""
         self.subtitle_list.clear()
         
-        for subtitle in self.subtitles[:50]:  # 只显示前50条
+        for subtitle in self.subtitles[:50]:  # Only show first 50 items
             start_time = self._ms_to_time_string(subtitle.start_time + self.time_offset)
             end_time = self._ms_to_time_string(subtitle.end_time + self.time_offset)
             
@@ -152,7 +152,7 @@ class SubtitleImportDialog(QDialog):
         self.connect_signals()
     
     def setup_ui(self):
-        """设置用户界面"""
+        """Setup user interface"""
         self.setWindowTitle("Import Subtitle File")
         self.setMinimumSize(800, 600)
         self.setModal(True)
@@ -191,76 +191,76 @@ class SubtitleImportDialog(QDialog):
         layout.addLayout(button_layout)
     
     def create_import_panel(self):
-        """创建导入面板"""
+        """Create import panel"""
         widget = QFrame()
         layout = QVBoxLayout(widget)
         
-        # 文件选择组
-        file_group = QGroupBox("选择字幕文件")
+        # File selection group
+        file_group = QGroupBox("Select Subtitle File")
         file_layout = QVBoxLayout(file_group)
         
-        # 文件路径显示
-        self.file_path_label = QLabel("未选择文件")
+        # File path display
+        self.file_path_label = QLabel("No file selected")
         self.file_path_label.setStyleSheet("color: #666; font-style: italic;")
         file_layout.addWidget(self.file_path_label)
         
-        # 选择文件按钮
-        select_file_btn = QPushButton("选择SRT文件")
+        # Select file button
+        select_file_btn = QPushButton("Select SRT File")
         select_file_btn.clicked.connect(self.select_subtitle_file)
         file_layout.addWidget(select_file_btn)
         
-        # 进度条
+        # Progress bar
         self.progress_bar = QProgressBar()
         self.progress_bar.setVisible(False)
         file_layout.addWidget(self.progress_bar)
         
         layout.addWidget(file_group)
         
-        # 字幕信息组
-        self.info_group = QGroupBox("字幕信息")
+        # Subtitle info group
+        self.info_group = QGroupBox("Subtitle Information")
         info_layout = QFormLayout(self.info_group)
         
         self.subtitle_count_label = QLabel("-")
-        info_layout.addRow("字幕条数:", self.subtitle_count_label)
+        info_layout.addRow("Subtitle Count:", self.subtitle_count_label)
         
         self.duration_label = QLabel("-")
-        info_layout.addRow("总时长:", self.duration_label)
+        info_layout.addRow("Total Duration:", self.duration_label)
         
         self.time_range_label = QLabel("-")
-        info_layout.addRow("时间范围:", self.time_range_label)
+        info_layout.addRow("Time Range:", self.time_range_label)
         
         self.info_group.setVisible(False)
         layout.addWidget(self.info_group)
         
-        # 时间同步调整组
-        self.sync_group = QGroupBox("时间同步调整")
+        # Time synchronization adjustment group
+        self.sync_group = QGroupBox("Time Synchronization Adjustment")
         sync_layout = QFormLayout(self.sync_group)
         
-        # 时间偏移调整
+        # Time offset adjustment
         offset_layout = QHBoxLayout()
         
         self.offset_slider = QSlider(Qt.Horizontal)
-        self.offset_slider.setRange(-30000, 30000)  # -30秒到+30秒
+        self.offset_slider.setRange(-30000, 30000)  # -30 seconds to +30 seconds
         self.offset_slider.setValue(0)
         self.offset_slider.valueChanged.connect(self.on_offset_changed)
         offset_layout.addWidget(self.offset_slider)
         
-        self.offset_label = QLabel("0.0秒")
+        self.offset_label = QLabel("0.0s")
         self.offset_label.setMinimumWidth(60)
         offset_layout.addWidget(self.offset_label)
         
-        sync_layout.addRow("时间偏移:", offset_layout)
+        sync_layout.addRow("Time Offset:", offset_layout)
         
-        # 重置按钮
-        reset_btn = QPushButton("重置")
+        # Reset button
+        reset_btn = QPushButton("Reset")
         reset_btn.clicked.connect(self.reset_offset)
         sync_layout.addRow("", reset_btn)
         
         self.sync_group.setVisible(False)
         layout.addWidget(self.sync_group)
         
-        # 验证结果组
-        self.validation_group = QGroupBox("验证结果")
+        # Validation results group
+        self.validation_group = QGroupBox("Validation Results")
         validation_layout = QVBoxLayout(self.validation_group)
         
         self.validation_text = QTextEdit()
@@ -275,35 +275,35 @@ class SubtitleImportDialog(QDialog):
         return widget
     
     def connect_signals(self):
-        """连接信号"""
+        """Connect signals"""
         self.subtitle_parser.parsing_started.connect(self.on_parsing_started)
         self.subtitle_parser.parsing_finished.connect(self.on_parsing_finished)
         self.subtitle_parser.progress_updated.connect(self.progress_bar.setValue)
     
     def select_subtitle_file(self):
-        """选择字幕文件"""
+        """Select subtitle file"""
         file_path, _ = QFileDialog.getOpenFileName(
             self,
-            "选择字幕文件",
+            "Select Subtitle File",
             "",
-            "字幕文件 (*.srt);;所有文件 (*)"
+            "Subtitle Files (*.srt);;All Files (*)"
         )
         
         if file_path:
             self.load_subtitle_file(file_path)
     
     def load_subtitle_file(self, file_path):
-        """加载字幕文件"""
+        """Load subtitle file"""
         self.file_path_label.setText(os.path.basename(file_path))
         self.subtitle_parser.load_srt_file(file_path)
     
     def on_parsing_started(self):
-        """解析开始"""
+        """Parsing started"""
         self.progress_bar.setVisible(True)
         self.progress_bar.setValue(0)
     
     def on_parsing_finished(self, success, message):
-        """解析完成"""
+        """Parsing finished"""
         self.progress_bar.setVisible(False)
         
         if success:
@@ -312,11 +312,11 @@ class SubtitleImportDialog(QDialog):
             self.validate_subtitles()
             self.import_button.setEnabled(True)
         else:
-            QMessageBox.warning(self, "解析失败", message)
+            QMessageBox.warning(self, "Parsing Failed", message)
             self.import_button.setEnabled(False)
     
     def show_subtitle_info(self):
-        """显示字幕信息"""
+        """Show subtitle information"""
         stats = self.subtitle_parser.get_subtitle_stats()
         
         self.subtitle_count_label.setText(str(stats['total_count']))
@@ -333,65 +333,65 @@ class SubtitleImportDialog(QDialog):
         self.sync_group.setVisible(True)
     
     def validate_subtitles(self):
-        """验证字幕"""
+        """Validate subtitles"""
         if self.video_duration_ms > 0:
             validation = self.subtitle_parser.validate_timing(self.video_duration_ms)
             
             result_text = []
             
             if validation['valid']:
-                result_text.append("✓ 字幕验证通过")
+                result_text.append("✓ Subtitle validation passed")
             else:
-                result_text.append("⚠ 发现以下问题:")
+                result_text.append("⚠ Found the following issues:")
                 for issue in validation['issues']:
                     result_text.append(f"  • {issue}")
                 
                 if validation['suggestions']:
-                    result_text.append("\n建议:")
+                    result_text.append("\nSuggestions:")
                     for suggestion in validation['suggestions']:
                         result_text.append(f"  • {suggestion}")
             
-            # 显示统计信息
+            # Show statistics
             stats = validation.get('stats', {})
             if stats:
-                result_text.append(f"\n统计信息:")
-                result_text.append(f"  • 总字幕数: {stats.get('total_subtitles', 0)}")
+                result_text.append(f"\nStatistics:")
+                result_text.append(f"  • Total subtitles: {stats.get('total_subtitles', 0)}")
                 if stats.get('overlapping', 0) > 0:
-                    result_text.append(f"  • 重叠字幕: {stats['overlapping']}")
+                    result_text.append(f"  • Overlapping subtitles: {stats['overlapping']}")
                 if stats.get('gaps', 0) > 0:
-                    result_text.append(f"  • 间隔过大: {stats['gaps']}")
+                    result_text.append(f"  • Large gaps: {stats['gaps']}")
             
             self.validation_text.setText('\n'.join(result_text))
             self.validation_group.setVisible(True)
     
     def on_offset_changed(self, value):
-        """偏移量改变"""
+        """Offset changed"""
         offset_sec = value / 1000.0
-        self.offset_label.setText(f"{offset_sec:+.1f}秒")
+        self.offset_label.setText(f"{offset_sec:+.1f}s")
         
         self.subtitle_parser.set_time_offset(value)
         self.preview_widget.set_time_offset(value)
         
-        # 重新验证
+        # Re-validate
         if self.video_duration_ms > 0:
             self.validate_subtitles()
     
     def reset_offset(self):
-        """重置偏移量"""
+        """Reset offset"""
         self.offset_slider.setValue(0)
     
     def set_current_time(self, time_ms):
-        """设置当前播放时间"""
+        """Set current playback time"""
         self.current_time = time_ms
         self.preview_widget.set_current_time(time_ms)
     
     def import_subtitle(self):
-        """导入字幕"""
+        """Import subtitle"""
         if self.subtitle_parser.subtitles:
             self.subtitle_loaded.emit(self.subtitle_parser)
             self.accept()
         else:
-            QMessageBox.warning(self, "警告", "没有可导入的字幕数据")
+            QMessageBox.warning(self, "Warning", "No subtitle data to import")
     
     def _ms_to_time_string(self, ms):
         """Convert milliseconds to time string"""

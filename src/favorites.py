@@ -95,7 +95,7 @@ def save_current_to_favorites(mw):
         resume_position_ms=resume_pos or 0,
         resume_exercise_index=resume_index or 0,
     )
-    # 记录当前收藏条目的ID，供自动保存进度使用
+    # Record current favorite entry ID for auto-save progress
     try:
         mw.current_library_entry_id = entry.id
     except Exception:

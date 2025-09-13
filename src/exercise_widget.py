@@ -256,7 +256,7 @@ class SubtitleExerciseWidget(QFrame):
         self.setup_shortcuts()
     
     def setup_ui(self):
-        """设置UI"""
+        """Setup UI"""
         self.setFrameStyle(QFrame.StyledPanel)
         self.setStyleSheet("""
             QFrame {
@@ -311,9 +311,9 @@ class SubtitleExerciseWidget(QFrame):
         scroll_area.setWidgetResizable(True)
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        scroll_area.setMinimumHeight(160)  # 提升默认可读空间
+        scroll_area.setMinimumHeight(160)  # Increase default readable space
         
-        # 优化滚动区域样式，减少边框占用
+        # Optimize scroll area style, reduce border usage
         scroll_area.setStyleSheet("""
             QScrollArea {
                 background-color: white;
@@ -334,15 +334,15 @@ class SubtitleExerciseWidget(QFrame):
         self.subtitle_layout.setSpacing(10)
         
         scroll_area.setWidget(self.subtitle_widget)
-        layout.addWidget(scroll_area, 1)  # 设置拉伸因子，让内容区域占用更多空间
+        layout.addWidget(scroll_area, 1)  # Set stretch factor to let content area occupy more space
         
-        # 紧凑的控制按钮区域
+        # Compact control button area
         control_layout = QHBoxLayout()
-        control_layout.setContentsMargins(0, 3, 0, 0)  # 减少按钮区域边距
-        control_layout.setSpacing(8)  # 减少按钮间距
+        control_layout.setContentsMargins(0, 3, 0, 0)  # Reduce button area margins
+        control_layout.setSpacing(8)  # Reduce button spacing
         
-        # 提示按钮 - 紧凑样式
-        self.hint_button = QPushButton("💡 提示")
+        # Hint button - compact style
+        self.hint_button = QPushButton("💡 Hint")
         self.hint_button.setStyleSheet("""
             QPushButton {
                 background-color: #ffc107;
@@ -364,8 +364,8 @@ class SubtitleExerciseWidget(QFrame):
         self.hint_button.clicked.connect(self.hint_requested.emit)
         control_layout.addWidget(self.hint_button)
         
-        # 显示答案按钮 - 紧凑样式
-        self.show_answer_button = QPushButton("👁️ 显示答案")
+        # Show answer button - compact style
+        self.show_answer_button = QPushButton("👁️ Show Answer")
         self.show_answer_button.setStyleSheet("""
             QPushButton {
                 background-color: #6c757d;
@@ -387,8 +387,8 @@ class SubtitleExerciseWidget(QFrame):
         self.show_answer_button.clicked.connect(self.show_all_answers)
         control_layout.addWidget(self.show_answer_button)
 
-        # 重播当前例句按钮 - 紧凑样式
-        self.replay_button = QPushButton("🔁 重播")
+        # Replay current sentence button - compact style
+        self.replay_button = QPushButton("🔁 Replay")
         self.replay_button.setStyleSheet("""
             QPushButton {
                 background-color: #17a2b8;
@@ -407,14 +407,14 @@ class SubtitleExerciseWidget(QFrame):
                 background-color: #117a8b;
             }
         """)
-        self.replay_button.setToolTip("重播当前例句 (R)")
+        self.replay_button.setToolTip("Replay current sentence (R)")
         self.replay_button.clicked.connect(self.replay_requested.emit)
         control_layout.addWidget(self.replay_button)
 
         control_layout.addStretch()
         
-        # 确认按钮 - 紧凑样式
-        self.confirm_button = QPushButton("✓ 确认")
+        # Confirm button - compact style
+        self.confirm_button = QPushButton("✓ Confirm")
         self.confirm_button.setStyleSheet("""
             QPushButton {
                 background-color: #28a745;
@@ -441,8 +441,8 @@ class SubtitleExerciseWidget(QFrame):
         self.confirm_button.setEnabled(False)
         control_layout.addWidget(self.confirm_button)
         
-        # 下一句按钮 - 紧凑样式
-        self.next_button = QPushButton("▶️ 下一句")
+        # Next sentence button - compact style
+        self.next_button = QPushButton("▶️ Next")
         self.next_button.setStyleSheet("""
             QPushButton {
                 background-color: #007bff;
@@ -467,37 +467,37 @@ class SubtitleExerciseWidget(QFrame):
         
         layout.addLayout(control_layout)
         
-        # 默认显示
+        # Default display
         self.show_waiting_state()
     
     def setup_shortcuts(self):
-        """设置快捷键"""
-        # Enter键确认
+        """Setup shortcuts"""
+        # Enter key confirm
         enter_shortcut = QShortcut(QKeySequence(Qt.Key_Return), self)
         enter_shortcut.activated.connect(self.check_answers)
-        # 支持数字键盘 Enter
+        # Support numeric keypad Enter
         keypad_enter_shortcut = QShortcut(QKeySequence(Qt.Key_Enter), self)
         keypad_enter_shortcut.activated.connect(self.check_answers)
         
-        # Ctrl+H 提示
+        # Ctrl+H hint
         hint_shortcut = QShortcut(QKeySequence("Ctrl+H"), self)
         hint_shortcut.activated.connect(self.hint_requested.emit)
         
-        # Ctrl+A 显示答案
+        # Ctrl+A show answer
         answer_shortcut = QShortcut(QKeySequence("Ctrl+A"), self)
         answer_shortcut.activated.connect(self.show_all_answers)
-        # R 键重播当前例句
+        # R key replay current sentence
         replay_shortcut = QShortcut(QKeySequence(Qt.Key_R), self)
         replay_shortcut.activated.connect(self.replay_requested.emit)
     
     def show_waiting_state(self):
-        """显示等待状态"""
-        print("[DEBUG] show_waiting_state 被调用")
+        """Show waiting state"""
+        print("[DEBUG] show_waiting_state called")
         self.clear_layout(self.subtitle_layout)
         
-        waiting_label = QLabel("🎬 准备就绪\n\n请导入视频和字幕文件开始练习")
+        waiting_label = QLabel("🎬 Ready\n\nPlease import video and subtitle files to start exercise")
         waiting_label.setAlignment(Qt.AlignCenter)
-        waiting_label.setMinimumHeight(80)  # 减少高度
+        waiting_label.setMinimumHeight(80)  # Reduce height
         waiting_label.setStyleSheet("""
             QLabel {
                 font-size: 14px;
@@ -512,37 +512,37 @@ class SubtitleExerciseWidget(QFrame):
         
         self.subtitle_layout.addWidget(waiting_label)
         
-        # 确保布局被正确应用
+        # Ensure layout is properly applied
         self.subtitle_widget.setMinimumHeight(90)
         self.subtitle_layout.update()
-        print("[DEBUG] 等待状态标签已添加并更新布局")
+        print("[DEBUG] Waiting state label added and layout updated")
         
         self.confirm_button.setEnabled(False)
         self.next_button.setVisible(False)
     
     def show_subtitle_loaded(self, display_data: Dict):
-        """显示字幕加载成功状态"""
-        print(f"[DEBUG] SubtitleExerciseWidget.show_subtitle_loaded 被调用")
-        print(f"[DEBUG] 接收到的数据: {display_data}")
+        """Show subtitle loading success state"""
+        print(f"[DEBUG] SubtitleExerciseWidget.show_subtitle_loaded called")
+        print(f"[DEBUG] Received data: {display_data}")
         
         try:
             self.clear_layout(self.subtitle_layout)
-            print("[DEBUG] 已清空布局")
+            print("[DEBUG] Layout cleared")
             
-            # 更新进度信息
+            # Update progress information
             if 'total' in display_data:
-                progress_text = f"共 {display_data['total']} 条字幕"
+                progress_text = f"Total {display_data['total']} subtitles"
                 self.progress_label.setText(progress_text)
-                print(f"[DEBUG] 更新进度标签: {progress_text}")
+                print(f"[DEBUG] Updated progress label: {progress_text}")
             
-            # 创建提示标签 - 紧凑样式
-            info_text = display_data.get('original_text', '字幕已加载')
-            print(f"[DEBUG] 创建信息标签，文本: {info_text}")
+            # Create info label - compact style
+            info_text = display_data.get('original_text', 'Subtitles loaded')
+            print(f"[DEBUG] Created info label, text: {info_text}")
             
             info_label = QLabel(info_text)
             info_label.setAlignment(Qt.AlignCenter)
             info_label.setWordWrap(True)
-            info_label.setMinimumHeight(70)  # 减少高度
+            info_label.setMinimumHeight(70)  # Reduce height
             info_label.setStyleSheet("""
                 QLabel {
                     font-size: 13px;
@@ -557,58 +557,58 @@ class SubtitleExerciseWidget(QFrame):
             """)
             
             self.subtitle_layout.addWidget(info_label)
-            print("[DEBUG] 信息标签已添加到布局")
+            print("[DEBUG] Info label added to layout")
             
-            # 确保布局被正确应用
+            # Ensure layout is properly applied
             self.subtitle_widget.setMinimumHeight(80)
             self.subtitle_layout.update()
-            print("[DEBUG] 布局和尺寸已更新")
+            print("[DEBUG] Layout and size updated")
             
-            # 禁用练习相关按钮
+            # Disable exercise-related buttons
             self.confirm_button.setEnabled(False)
             self.next_button.setVisible(False)
-            print("[DEBUG] 按钮状态已更新")
+            print("[DEBUG] Button state updated")
             
-            # 强制刷新界面
+            # Force refresh interface
             self.update()
             self.repaint()
-            print("[DEBUG] 界面刷新完成")
+            print("[DEBUG] Interface refresh completed")
             
         except Exception as e:
-            print(f"[ERROR] show_subtitle_loaded 执行出错: {e}")
+            print(f"[ERROR] show_subtitle_loaded execution error: {e}")
             import traceback
             traceback.print_exc()
     
     def show_exercise(self, exercise_data: Dict):
-        """显示练习内容"""
+        """Show exercise content"""
         self.current_exercise = exercise_data
         self.clear_layout(self.subtitle_layout)
         self.blank_inputs = []
         
-        # 更新进度
+        # Update progress
         if 'current' in exercise_data and 'total' in exercise_data:
-            self.progress_label.setText(f"第 {exercise_data['current']}/{exercise_data['total']} 句")
+            self.progress_label.setText(f"Exercise {exercise_data['current']}/{exercise_data['total']}")
         
-        # 创建字幕显示
+        # Create subtitle display
         subtitle_text = exercise_data.get('original_text', '')
         blanks_info = exercise_data.get('blanks', [])
         
-        # 构建带输入框的字幕显示
+        # Build subtitle display with input boxes
         self.create_interactive_subtitle(subtitle_text, blanks_info)
         
-        # 启用确认按钮
+        # Enable confirm button
         self.confirm_button.setEnabled(True)
         self.next_button.setVisible(False)
         
-        # 聚焦第一个输入框
+        # Focus on first input box
         if self.blank_inputs:
             self.blank_inputs[0].setFocus()
     
     def create_interactive_subtitle(self, text: str, blanks: List[Dict]):
-        """创建完整句子的交互式显示"""
-        # 如果没有文本，显示错误信息
+        """Create interactive display for complete sentence"""
+        # If no text, show error message
         if not text.strip():
-            error_label = QLabel("❌ 练习数据错误：没有找到字幕文本")
+            error_label = QLabel("❌ Exercise data error: No subtitle text found")
             error_label.setAlignment(Qt.AlignCenter)
             error_label.setStyleSheet("""
                 QLabel {
@@ -623,12 +623,12 @@ class SubtitleExerciseWidget(QFrame):
             self.subtitle_layout.addWidget(error_label)
             return
         
-        # 创建完整句子的显示容器
+        # Create display container for complete sentence
         self._create_complete_sentence_display(text, blanks)
     
     def _create_complete_sentence_display(self, text: str, blanks: List[Dict]):
-        """创建完整句子的显示，保持句子完整性"""
-        # 创建主句子容器
+        """Create display for complete sentence, maintaining sentence integrity"""
+        # Create main sentence container
         sentence_container = QWidget()
         sentence_container.setStyleSheet("""
             QWidget {
@@ -643,20 +643,20 @@ class SubtitleExerciseWidget(QFrame):
             }
         """)
         
-        # 使用流式布局来显示完整句子
+        # Use flow layout to display complete sentence
         flow_layout = FlowLayout(margin=0, hspacing=8, vspacing=12)
         sentence_container.setLayout(flow_layout)
         
-        # 分割文本为单词
+        # Split text into words
         words = text.split()
         
-        # 创建挖空位置的映射
+        # Create mapping for blank positions
         blank_positions = {blank['position']: blank for blank in blanks}
         
-        # 逐词创建显示元素
+        # Create display elements word by word
         for word_index, word in enumerate(words):
             if word_index in blank_positions:
-                # 创建挖空输入框
+                # Create blank input box
                 blank_info = blank_positions[word_index]
                 input_widget = BlankInputWidget(
                     expected_answer=blank_info['answer'],
@@ -666,7 +666,7 @@ class SubtitleExerciseWidget(QFrame):
                 self.blank_inputs.append(input_widget)
                 flow_layout.addWidget(input_widget)
             else:
-                # 创建普通文字标签
+                # Create normal text label
                 word_label = QLabel(word)
                 word_label.setStyleSheet("""
                     QLabel {
@@ -681,9 +681,9 @@ class SubtitleExerciseWidget(QFrame):
                 """)
                 flow_layout.addWidget(word_label)
         
-        # 添加句子提示信息（如果有）
+        # Add sentence hint information (if any)
         if blanks:
-            hint_text = f"💡 请填入 {len(blanks)} 个空白处"
+            hint_text = f"💡 Please fill in {len(blanks)} blanks"
             hint_label = QLabel(hint_text)
             hint_label.setAlignment(Qt.AlignCenter)
             hint_label.setStyleSheet("""
@@ -698,7 +698,7 @@ class SubtitleExerciseWidget(QFrame):
                 }
             """)
             
-            # 创建包含句子和提示的垂直布局
+            # Create vertical layout containing sentence and hints
             main_container = QWidget()
             main_layout = QVBoxLayout(main_container)
             main_layout.setContentsMargins(0, 0, 0, 0)
@@ -711,68 +711,68 @@ class SubtitleExerciseWidget(QFrame):
             self.subtitle_layout.addWidget(sentence_container)
     
     def _get_sentence_preview(self, text: str, max_length: int = 100) -> str:
-        """获取句子预览，用于显示完整句子的缩略版"""
+        """Get sentence preview for displaying abbreviated version of complete sentence"""
         if len(text) <= max_length:
             return text
         
-        # 在单词边界截断
+        # Truncate at word boundary
         truncated = text[:max_length]
         last_space = truncated.rfind(' ')
-        if last_space > max_length * 0.8:  # 如果截断点不会丢失太多内容
+        if last_space > max_length * 0.8:  # If truncation point won't lose too much content
             truncated = truncated[:last_space]
         
         return truncated + "..."
     
     def on_answer_submitted(self, answer: str):
-        """处理答案提交"""
-        # 检查是否所有答案都已填写
+        """Handle answer submission"""
+        # Check if all answers are filled
         if self.are_all_answers_filled():
             self.check_answers()
     
     def are_all_answers_filled(self) -> bool:
-        """检查所有答案是否已填写"""
+        """Check if all answers are filled"""
         for input_widget in self.blank_inputs:
             if not input_widget.text().strip():
                 return False
         return True
     
     def are_all_answers_correct(self) -> bool:
-        """检查所有答案是否正确"""
+        """Check if all answers are correct"""
         for input_widget in self.blank_inputs:
             if not input_widget.is_correct:
                 return False
         return True
     
     def check_answers(self):
-        """检查答案"""
+        """Check answers"""
         if not self.blank_inputs:
             return
-        # 防止重复触发或递归调用
+        # Prevent duplicate triggering or recursive calls
         if getattr(self, '_checking_answers', False):
             return
         self._checking_answers = True
         
-        # 提交所有答案进行验证
+        # Submit all answers for validation
         for input_widget in self.blank_inputs:
             input_widget.submit_without_signal()
         
-        # 检查结果
+        # Check results
         if self.are_all_answers_correct():
             self.show_success_state()
-            # 正确后快速进入下一句（短暂延迟以展示反馈）
+            # Quickly proceed to next sentence after correct answer (brief delay to show feedback)
             QTimer.singleShot(400, self.next_exercise_requested.emit)
         else:
             self.show_retry_state()
-        # 结束检查标志复位
+        # Reset check flag
         self._checking_answers = False
     
     def show_success_state(self):
-        """显示成功状态"""
+        """Show success state"""
         self.confirm_button.setEnabled(False)
         self.next_button.setVisible(True)
         
-        # 可以添加成功动画或音效
-        self.title_label.setText("✅ 回答正确！")
+        # Can add success animation or sound effect
+        self.title_label.setText("✅ Correct answer!")
         self.title_label.setStyleSheet("""
             QLabel {
                 font-size: 18px;
@@ -783,12 +783,12 @@ class SubtitleExerciseWidget(QFrame):
             }
         """)
         
-        # 3秒后自动恢复标题
+        # Auto-restore title after 3 seconds
         QTimer.singleShot(3000, self.reset_title)
     
     def show_retry_state(self):
-        """显示重试状态"""
-        self.title_label.setText("❌ 请检查答案并重试")
+        """Show retry state"""
+        self.title_label.setText("❌ Please check answers and retry")
         self.title_label.setStyleSheet("""
             QLabel {
                 font-size: 18px;
@@ -799,12 +799,12 @@ class SubtitleExerciseWidget(QFrame):
             }
         """)
         
-        # 3秒后自动恢复标题
+        # Auto-restore title after 3 seconds
         QTimer.singleShot(3000, self.reset_title)
     
     def reset_title(self):
-        """重置标题"""
-        self.title_label.setText("字幕练习区")
+        """Reset title"""
+        self.title_label.setText("Subtitle Exercise Area")
         self.title_label.setStyleSheet("""
             QLabel {
                 font-size: 18px;
@@ -816,7 +816,7 @@ class SubtitleExerciseWidget(QFrame):
         """)
     
     def show_all_answers(self):
-        """显示所有答案"""
+        """Show all answers"""
         for input_widget in self.blank_inputs:
             input_widget.show_answer()
         
@@ -825,7 +825,7 @@ class SubtitleExerciseWidget(QFrame):
         self.show_answer_requested.emit()
     
     def clear_layout(self, layout):
-        """清空布局"""
+        """Clear layout"""
         while layout.count():
             child = layout.takeAt(0)
             if child.widget():

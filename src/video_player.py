@@ -81,19 +81,19 @@ class VideoControlWidget(QWidget):
         layout.addWidget(self.fullscreen_button)
     
     def set_play_icon(self, is_playing):
-        """设置播放/暂停图标"""
+        """Set play/pause icon"""
         if is_playing:
             self.play_button.setIcon(self.style().standardIcon(QStyle.SP_MediaPause))
-            self.play_button.setToolTip("暂停 (空格键)")
+            self.play_button.setToolTip("Pause (Space)")
         else:
             self.play_button.setIcon(self.style().standardIcon(QStyle.SP_MediaPlay))
-            self.play_button.setToolTip("播放 (空格键)")
+            self.play_button.setToolTip("Play (Space)")
     
     def update_position(self, position, duration):
-        """更新播放位置"""
+        """Update playback position"""
         self.position_slider.setValue(position)
         
-        # 更新时间显示
+        # Update time display
         current_time = QTime(0, 0, 0).addMSecs(position)
         total_time = QTime(0, 0, 0).addMSecs(duration)
         
@@ -102,11 +102,11 @@ class VideoControlWidget(QWidget):
         self.time_label.setText(time_text)
     
     def update_duration(self, duration):
-        """更新总时长"""
+        """Update total duration"""
         self.position_slider.setRange(0, duration)
 
 class VideoPlayerWidget(QFrame):
-    """视频播放器组件"""
+    """Video player component"""
     
     # Define signals
     video_loaded = Signal(str)  # Video loading completed
