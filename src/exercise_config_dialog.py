@@ -116,38 +116,8 @@ class ExerciseConfigDialog(QDialog):
         pos_layout.addStretch()
         focus_layout.addLayout(pos_layout)
         
-        # Blank by difficulty
-        diff_label = QLabel("Blank by Vocabulary Difficulty:")
-        diff_label.setFont(QFont("", 10, QFont.Bold))
-        focus_layout.addWidget(diff_label)
-        
-        diff_layout = QHBoxLayout()
-        self.common_check = QCheckBox("High-frequency Words")
-        self.advanced_check = QCheckBox("Low-frequency/Core Vocabulary")
-        
-        # Default select core vocabulary
-        self.advanced_check.setChecked(True)
-        
-        diff_layout.addWidget(self.common_check)
-        diff_layout.addWidget(self.advanced_check)
-        diff_layout.addStretch()
-        focus_layout.addLayout(diff_layout)
-        
-        # Blank by grammar points
-        grammar_label = QLabel("Blank by Grammar Points:")
-        grammar_label.setFont(QFont("", 10, QFont.Bold))
-        focus_layout.addWidget(grammar_label)
-        
-        grammar_layout = QHBoxLayout()
-        self.tense_check = QCheckBox("Verb Tenses")
-        self.modal_check = QCheckBox("Modal Verbs")
-        self.phrase_check = QCheckBox("Fixed Collocations")
-        
-        grammar_layout.addWidget(self.tense_check)
-        grammar_layout.addWidget(self.modal_check)
-        grammar_layout.addWidget(self.phrase_check)
-        grammar_layout.addStretch()
-        focus_layout.addLayout(grammar_layout)
+        # Removed old sections: Vocabulary difficulty and Grammar points
+        # to keep focus strictly on part-of-speech based blanking.
         
         layout.addWidget(focus_group)
         
@@ -333,20 +303,6 @@ class ExerciseConfigDialog(QDialog):
         if self.prep_check.isChecked():
             areas.append("prepositions")
         
-        # Difficulty types
-        if self.common_check.isChecked():
-            areas.append("high-frequency words")
-        if self.advanced_check.isChecked():
-            areas.append("low-frequency words")
-        
-        # Grammar types
-        if self.tense_check.isChecked():
-            areas.append("verb tenses")
-        if self.modal_check.isChecked():
-            areas.append("modal verbs")
-        if self.phrase_check.isChecked():
-            areas.append("fixed collocations")
-        
         return areas if areas else ["nouns", "verbs"]  # Default value
     
     def get_config(self) -> Dict:
@@ -409,11 +365,7 @@ class ExerciseConfigDialog(QDialog):
         self.verb_check.setChecked('verbs' in focus_areas)
         self.adj_check.setChecked('adjectives' in focus_areas)
         self.prep_check.setChecked('prepositions' in focus_areas)
-        self.common_check.setChecked('high-frequency words' in focus_areas)
-        self.advanced_check.setChecked('low-frequency words' in focus_areas)
-        self.tense_check.setChecked('verb tenses' in focus_areas)
-        self.modal_check.setChecked('modal verbs' in focus_areas)
-        self.phrase_check.setChecked('fixed collocations' in focus_areas)
+        # Removed legacy toggles (vocabulary difficulty / grammar points)
         
         # Set blank density
         density = exercise_config.get('blank_density', 25)

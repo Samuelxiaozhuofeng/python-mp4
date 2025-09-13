@@ -165,6 +165,7 @@ class AIExerciseGenerator(QObject):
         """Build AI prompt"""
         language = config.get('language', 'English')
         level = config.get('level', 'B1-B2')
+        # POS-focused blanking only (UI simplified)
         focus_areas = config.get('focus_areas', ['nouns', 'verbs'])
         blank_density = config.get('blank_density', 25)
         
@@ -175,12 +176,16 @@ class AIExerciseGenerator(QObject):
         # Adjust prompt based on language
         language_info = self._get_language_info(language)
         
-        # Optional candidates from spaCy to constrain AI choice
+        # Optional candidates from spaCy to constrain AI choice (hybrid)
         candidates_txt = ""
         if candidates:
             try:
                 items = ", ".join([f"{{\"position\": {c['position']}, \"word\": \"{c['word']}\"}}" for c in candidates])
-                candidates_txt = f"\n\nBlank candidates (use exactly these): [ {items} ]\n"
+                # Emphasize constraints for hybrid mode
+                candidates_txt = (
+                    f"\n\nBlank candidates (use exactly these; do not alter positions or words; "
+                    f"number of blanks must equal the number of candidates): [ {items} ]\n"
+                )
             except Exception:
                 candidates_txt = ""
 
@@ -188,31 +193,28 @@ class AIExerciseGenerator(QObject):
 
 Sentence: "{text}"
 
-Requirements:
-1. Target language: {language_info['name']}
-2. Learner level: {level} ({language_info['level_desc']})
-3. Focus blank types: {', '.join(focus_areas)}
-4. Blank density: approximately {blank_density}% (suggested {suggested_blanks} blanks)
+ Requirements:
+ 1. Target language: {language_info['name']}
+ 2. Learner level: {level} ({language_info['level_desc']})
+ 3. POS focus (parts of speech): {', '.join(focus_areas)}
+ 4. Blank density: approximately {blank_density}% (suggested {suggested_blanks} blanks). If candidates are provided, ignore density and use candidates exactly.
 {candidates_txt}
 
-Blank principles:
-- Choose vocabulary that is challenging but not too difficult for {language_info['name']} learners at this level
-- Prioritize {', '.join(focus_areas)} type vocabulary
-- Avoid blanking {language_info['function_words']}
-- Consider {language_info['grammar_focus']}
-- Ensure the sentence remains meaningful and follows {language_info['name']} grammar rules after blanking
+ Blank principles:
+ - Choose tokens that match the POS focus and are meaningful content words for the level
+ - Avoid blanking {language_info['function_words']}
+ - Keep the sentence fluent and grammatical after blanking
 
-Hint generation requirements:
-- Hints should be expressed in Chinese
-- Include part-of-speech information (e.g., noun, verb, adjective, etc.)
-- Can include first letter hints
-- For complex vocabulary, provide meaning hints
+ Hint generation requirements:
+ - Hints in Chinese
+ - Include POS information (noun/verb/adj/adv, etc.) and first-letter hint
+ - Optionally include a brief meaning hint where helpful
 
 Please return results in JSON format:
 {{
     "blanks": [
         {{
-            "position": word position in sentence (starting from 0),
+            "position": word index in sentence (starting from 0, based on whitespace tokenization),
             "word": "original word to be blanked",
             "hint": "Chinese hint for learners (e.g., noun, represents food, first letter is f)",
             "difficulty": "difficulty level of the word (easy/medium/hard)"
@@ -295,6 +297,7 @@ Return only JSON, no other text."""
         """Build batch AI prompt"""
         language = config.get('language', 'English')
         level = config.get('level', 'B1-B2')
+        # POS-focused blanking only (UI simplified)
         focus_areas = config.get('focus_areas', ['nouns', 'verbs'])
         blank_density = config.get('blank_density', 25)
         
@@ -308,7 +311,9 @@ Return only JSON, no other text."""
             if batch_candidates and i < len(batch_candidates) and batch_candidates[i]:
                 try:
                     items = ", ".join([f"{{\"position\": {c['position']}, \"word\": \"{c['word']}\"}}" for c in batch_candidates[i]])
-                    sentences_text += f"\n   candidates: [ {items} ]"
+                    sentences_text += (
+                        f"\n   candidates: [ {items} ]  # Use these candidates exactly; do not change positions/words; count must match"
+                    )
                 except Exception:
                     pass
             sentences_text += "\n"
@@ -321,12 +326,13 @@ Sentence list:
 Requirements:
 - Target language: {language_info['name']}
 - Learner level: {level}
-- Focus blanks: {', '.join(focus_areas)}
-- 1-2 blanks per sentence
-- Hints in Chinese, include part-of-speech and first letter
+- POS focus (parts of speech): {', '.join(focus_areas)}
+- 1-2 blanks per sentence unless candidates are provided (then use candidates exactly)
+- Hints in Chinese: include POS and first letter; brief meaning when helpful
 
-Important: Please return standard compact JSON format, do not insert line breaks or special characters in JSON strings.
-If candidates are provided for a sentence, use exactly those positions and words for blanks.
+Important:
+- Return compact JSON only (no extra text). Do NOT insert line breaks or special characters in JSON strings.
+- If candidates are provided for a sentence, use exactly those positions and words; do not add/remove blanks.
 
 Return format example:
 {{"exercises": [{{"sentence_index": 1, "blanks": [{{"position": 0, "word": "example", "hint": "noun, first letter e", "difficulty": "medium"}}]}}]}}"""
