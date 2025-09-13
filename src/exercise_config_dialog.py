@@ -11,6 +11,7 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
 
 from config import config
+import spacy_cloze
 from ai_exercise_generator import AIExerciseThread
 
 class ExerciseConfigDialog(QDialog):
@@ -180,6 +181,73 @@ class ExerciseConfigDialog(QDialog):
         density_layout.addRow("", density_desc)
         
         layout.addWidget(density_group)
+
+        # Generation settings (spaCy/AI mode)
+        gen_group = QGroupBox("Generation Settings")
+        gen_layout = QFormLayout(gen_group)
+
+        # Mode combo with internal codes as userData
+        self.mode_combo = QComboBox()
+        self.mode_combo.addItem("Hybrid (spaCy + AI)", userData="hybrid")
+        self.mode_combo.addItem("spaCy only (local)", userData="spacy")
+        self.mode_combo.addItem("AI only", userData="ai")
+        self.mode_combo.currentIndexChanged.connect(self.update_estimated_time)
+        gen_layout.addRow("Generation Mode:", self.mode_combo)
+
+        # spaCy enable toggle
+        self.use_spacy_check = QCheckBox("Enable spaCy acceleration (recommended for Spanish)")
+        self.use_spacy_check.setChecked(True)
+        self.use_spacy_check.stateChanged.connect(self.update_estimated_time)
+        gen_layout.addRow("spaCy:", self.use_spacy_check)
+
+        tip = QLabel("spaCy 提供更稳定的分词/词性，hybrid 模式先选词再由 AI 生成提示。")
+        tip.setStyleSheet("color: #666; font-size: 12px;")
+        gen_layout.addRow("", tip)
+
+        layout.addWidget(gen_group)
+
+        # spaCy(local) specific options
+        self.spacy_group = QGroupBox("spaCy (local) Options")
+        sp_layout = QFormLayout(self.spacy_group)
+
+        # POS checkboxes
+        pos_box = QHBoxLayout()
+        self.sp_pos_noun = QCheckBox("NOUN")
+        self.sp_pos_verb = QCheckBox("VERB")
+        self.sp_pos_adj = QCheckBox("ADJ")
+        self.sp_pos_adv = QCheckBox("ADV")
+        for w in (self.sp_pos_noun, self.sp_pos_verb, self.sp_pos_adj, self.sp_pos_adv):
+            w.setChecked(True)
+            pos_box.addWidget(w)
+        pos_box.addStretch()
+        sp_layout.addRow("POS to blank:", pos_box)
+
+        # Max blanks per sentence
+        self.sp_max_blanks = QSpinBox()
+        self.sp_max_blanks.setRange(1, 5)
+        self.sp_max_blanks.setValue(2)
+        sp_layout.addRow("Max blanks per sentence:", self.sp_max_blanks)
+
+        # Exclude stopwords
+        self.sp_exclude_stop = QCheckBox("Exclude stopwords")
+        self.sp_exclude_stop.setChecked(True)
+        sp_layout.addRow("Stopwords:", self.sp_exclude_stop)
+
+        # Prefer named entities
+        self.sp_prefer_entities = QCheckBox("Prefer named entities / PROPN")
+        self.sp_prefer_entities.setChecked(True)
+        sp_layout.addRow("Entities:", self.sp_prefer_entities)
+
+        # Include lemma in hint
+        self.sp_hint_lemma = QCheckBox("Include lemma in hint")
+        self.sp_hint_lemma.setChecked(True)
+        sp_layout.addRow("Hints:", self.sp_hint_lemma)
+
+        layout.addWidget(self.spacy_group)
+
+        # Toggle spaCy group visibility based on mode
+        self.mode_combo.currentIndexChanged.connect(self._update_spacy_visibility)
+        self._update_spacy_visibility()
         
         # Preview information
         preview_group = QGroupBox("Generation Preview")
@@ -226,9 +294,16 @@ class ExerciseConfigDialog(QDialog):
         if not self.subtitles:
             self.estimated_time_label.setText("Estimated Generation Time: 0 seconds")
             return
-        
-        # Estimate time based on subtitle count (about 2-3 seconds per sentence)
-        estimated_seconds = len(self.subtitles) * 2.5
+        # Estimate time per sentence by mode
+        mode = self.mode_combo.currentData() if hasattr(self, 'mode_combo') else 'hybrid'
+        use_spacy = self.use_spacy_check.isChecked() if hasattr(self, 'use_spacy_check') else True
+        if mode == 'spacy' and use_spacy:
+            per = 0.08  # very fast local
+        elif mode == 'hybrid' and use_spacy:
+            per = 0.9   # faster than pure AI
+        else:
+            per = 2.5   # default AI estimate
+        estimated_seconds = len(self.subtitles) * per
         
         if estimated_seconds < 60:
             time_str = f"{int(estimated_seconds)} seconds"
@@ -238,6 +313,11 @@ class ExerciseConfigDialog(QDialog):
             time_str = f"{minutes} minutes {seconds} seconds"
         
         self.estimated_time_label.setText(f"Estimated Generation Time: {time_str}")
+
+    def _update_spacy_visibility(self):
+        """Show spaCy options only in spaCy(local) mode."""
+        mode = self.mode_combo.currentData()
+        self.spacy_group.setVisible(mode == 'spacy')
     
     def get_selected_focus_areas(self) -> List[str]:
         """Get selected blank focus areas"""
@@ -277,11 +357,31 @@ class ExerciseConfigDialog(QDialog):
         level_text = self.level_combo.currentText()
         level = level_text.split()[0]  # Extract A1-A2, B1-B2, C1-C2
         
+        # spaCy options
+        sp_pos = []
+        if self.sp_pos_noun.isChecked():
+            sp_pos.append("NOUN")
+        if self.sp_pos_verb.isChecked():
+            sp_pos.append("VERB")
+        if self.sp_pos_adj.isChecked():
+            sp_pos.append("ADJ")
+        if self.sp_pos_adv.isChecked():
+            sp_pos.append("ADV")
+
         return {
             'language': language,
             'level': level,
             'focus_areas': self.get_selected_focus_areas(),
-            'blank_density': self.density_slider.value()
+            'blank_density': self.density_slider.value(),
+            'use_spacy': self.use_spacy_check.isChecked(),
+            'generation_mode': self.mode_combo.currentData() or 'hybrid',
+            'spacy_options': {
+                'pos': sp_pos or ["NOUN", "VERB", "ADJ", "ADV"],
+                'max_blanks': int(self.sp_max_blanks.value()),
+                'exclude_stop': bool(self.sp_exclude_stop.isChecked()),
+                'hint_lemma': bool(self.sp_hint_lemma.isChecked()),
+                'prefer_entities': bool(self.sp_prefer_entities.isChecked()),
+            }
         }
     
     def load_config(self):
@@ -318,6 +418,33 @@ class ExerciseConfigDialog(QDialog):
         # Set blank density
         density = exercise_config.get('blank_density', 25)
         self.density_slider.setValue(density)
+
+        # Generation settings
+        use_spacy = exercise_config.get('use_spacy', True)
+        self.use_spacy_check.setChecked(bool(use_spacy))
+
+        mode = exercise_config.get('generation_mode', 'hybrid')
+        # select item whose userData equals mode
+        chosen = 0
+        for i in range(self.mode_combo.count()):
+            if self.mode_combo.itemData(i) == mode:
+                chosen = i
+                break
+        self.mode_combo.setCurrentIndex(chosen)
+        self.update_estimated_time()
+
+        # spaCy options load
+        sp = exercise_config.get('spacy_options', {}) or {}
+        pos = set(sp.get('pos', ["NOUN","VERB","ADJ","ADV"]))
+        self.sp_pos_noun.setChecked("NOUN" in pos)
+        self.sp_pos_verb.setChecked("VERB" in pos)
+        self.sp_pos_adj.setChecked("ADJ" in pos)
+        self.sp_pos_adv.setChecked("ADV" in pos)
+        self.sp_max_blanks.setValue(int(sp.get('max_blanks', 2)))
+        self.sp_exclude_stop.setChecked(bool(sp.get('exclude_stop', True)))
+        self.sp_hint_lemma.setChecked(bool(sp.get('hint_lemma', True)))
+        self.sp_prefer_entities.setChecked(bool(sp.get('prefer_entities', True)))
+        self._update_spacy_visibility()
     
     def save_config(self):
         """Save configuration"""
@@ -328,6 +455,10 @@ class ExerciseConfigDialog(QDialog):
             exercise_config['focus_areas'],
             exercise_config['blank_density']
         )
+        # Save spaCy integration settings
+        config.set('exercise.use_spacy', bool(exercise_config.get('use_spacy', True)))
+        config.set('exercise.generation_mode', exercise_config.get('generation_mode', 'hybrid'))
+        config.set('exercise.spacy_options', exercise_config.get('spacy_options', {}))
         config.save_config()
     
     def generate_exercises(self):
@@ -336,13 +467,42 @@ class ExerciseConfigDialog(QDialog):
             QMessageBox.warning(self, "Warning", "No subtitle data, please import subtitle file first")
             return
         
-        # Validate AI configuration
-        ai_config = config.get_ai_config()
-        if not ai_config.get('api_key') or not ai_config.get('api_url'):
-            QMessageBox.warning(self, "Warning", 
-                               "Please configure AI service first\n\n"
-                               "Click menu 'Settings' → 'AI Service Configuration' to configure")
-            return
+        # Determine mode and validate accordingly
+        ex_cfg = self.get_config()
+        mode = ex_cfg.get('generation_mode', 'hybrid')
+        if mode == 'spacy' and ex_cfg.get('use_spacy', True):
+            # Ensure spaCy model is available for the language
+            if not spacy_cloze.ensure_nlp(ex_cfg.get('language', 'Spanish')):
+                QMessageBox.warning(self, "spaCy Not Available",
+                                    "spaCy model unavailable. Please install Spanish model:\n\n"
+                                    "python -m spacy download es_core_news_md")
+                return
+        else:
+            # Validate AI configuration for modes that require AI
+            ai_config = config.get_ai_config()
+            if not ai_config.get('api_key') or not ai_config.get('api_url'):
+                # Offer to switch to spaCy-only if available
+                if spacy_cloze.ensure_nlp(ex_cfg.get('language', 'Spanish')):
+                    choice = QMessageBox.question(
+                        self,
+                        "AI Config Missing",
+                        "AI configuration not set. Switch to spaCy-only mode?",
+                        QMessageBox.Yes | QMessageBox.No,
+                        QMessageBox.Yes
+                    )
+                    if choice == QMessageBox.Yes:
+                        # Temporarily switch mode for this run and save
+                        self.mode_combo.setCurrentIndex(1)  # spaCy item
+                        self.use_spacy_check.setChecked(True)
+                        self.save_config()
+                    else:
+                        return
+                else:
+                    QMessageBox.warning(self, "Warning",
+                                        "Please configure AI service first or install spaCy Spanish model\n\n"
+                                        "AI: Settings → AI Service Configuration\n"
+                                        "spaCy: python -m spacy download es_core_news_md")
+                    return
         
         # Validate selections
         if not self.get_selected_focus_areas():

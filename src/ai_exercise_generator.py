@@ -7,6 +7,7 @@ import requests
 from typing import List, Dict, Optional, Tuple
 from PySide6.QtCore import QObject, Signal, QThread
 from config import config
+import spacy_cloze
 
 class AIExerciseGenerator(QObject):
     """AI Exercise Generator"""
@@ -23,8 +24,33 @@ class AIExerciseGenerator(QObject):
     def generate_exercises(self, subtitles: List, exercise_config: Dict) -> None:
         """Generate exercise data"""
         self.generation_started.emit()
-        
+
         try:
+            # Determine generation mode and spaCy availability
+            mode = (exercise_config or {}).get('generation_mode', 'hybrid')
+            use_spacy = bool((exercise_config or {}).get('use_spacy', True))
+            language = (exercise_config or {}).get('language', 'Spanish')
+
+            # spaCy-only fast path (no AI calls)
+            if use_spacy and mode == 'spacy' and spacy_cloze.ensure_nlp(language):
+                exercises = []
+                total_subtitles = len(subtitles)
+                for idx, subtitle in enumerate(subtitles):
+                    progress = int((idx + 1) / max(1, total_subtitles) * 100)
+                    self.progress_updated.emit(progress)
+                    blanks = spacy_cloze.select_blanks_spacy(subtitle.text, exercise_config)
+                    exercises.append({
+                        'original_text': subtitle.text,
+                        'blanks': blanks,
+                        'current': idx + 1,
+                        'total': total_subtitles,
+                        'subtitle_index': subtitle.index,
+                        'start_time': subtitle.start_time,
+                        'end_time': subtitle.end_time
+                    })
+                self.generation_finished.emit(True, f"Successfully generated {len(exercises)} exercises (spaCy)", exercises)
+                return
+
             # Validate AI configuration
             if not self.ai_config.get('api_key') or not self.ai_config.get('api_url'):
                 self.generation_finished.emit(False, "Please configure AI service first", [])
@@ -68,7 +94,20 @@ class AIExerciseGenerator(QObject):
         """Generate batch exercises"""
         try:
             # Build batch AI request
-            prompt = self.build_batch_prompt(batch_subtitles, exercise_config)
+            mode = (exercise_config or {}).get('generation_mode', 'hybrid')
+            use_spacy = bool((exercise_config or {}).get('use_spacy', True))
+            language = (exercise_config or {}).get('language', 'Spanish')
+
+            batch_candidates = None
+            if use_spacy and mode == 'hybrid' and spacy_cloze.ensure_nlp(language):
+                batch_candidates = []
+                for s in batch_subtitles:
+                    cands = spacy_cloze.suggest_candidates_for_ai(s.text, exercise_config)
+                    batch_candidates.append([
+                        {"position": c["position"], "word": c["word"]} for c in cands
+                    ])
+
+            prompt = self.build_batch_prompt(batch_subtitles, exercise_config, batch_candidates=batch_candidates)
             
             # Call AI service
             response = self.call_ai_service(prompt)
@@ -86,30 +125,43 @@ class AIExerciseGenerator(QObject):
         """Generate exercise for single subtitle"""
         try:
             # Build AI request
-            prompt = self.build_prompt(subtitle.text, exercise_config)
+            mode = (exercise_config or {}).get('generation_mode', 'hybrid')
+            use_spacy = bool((exercise_config or {}).get('use_spacy', True))
+            language = (exercise_config or {}).get('language', 'Spanish')
+
+            candidates = None
+            if use_spacy and mode == 'hybrid' and spacy_cloze.ensure_nlp(language):
+                cands = spacy_cloze.suggest_candidates_for_ai(subtitle.text, exercise_config)
+                candidates = [{"position": c["position"], "word": c["word"]} for c in cands]
+
+            prompt = self.build_prompt(subtitle.text, exercise_config, candidates=candidates)
             
             # Call AI service
             response = self.call_ai_service(prompt)
-            
+            blanks_data: List[Dict] = []
             if response:
                 # Parse AI response
                 blanks_data = self.parse_ai_response(response, subtitle.text)
-                
-                return {
-                    'original_text': subtitle.text,
-                    'blanks': blanks_data,
-                    'current': current,
-                    'total': total,
-                    'subtitle_index': subtitle.index,
-                    'start_time': subtitle.start_time,
-                    'end_time': subtitle.end_time
-                }
+
+            # Hybrid fallback: if AI failed or returned no blanks, try spaCy
+            if (not blanks_data) and use_spacy and spacy_cloze.ensure_nlp(language):
+                blanks_data = spacy_cloze.select_blanks_spacy(subtitle.text, exercise_config)
+
+            return {
+                'original_text': subtitle.text,
+                'blanks': blanks_data,
+                'current': current,
+                'total': total,
+                'subtitle_index': subtitle.index,
+                'start_time': subtitle.start_time,
+                'end_time': subtitle.end_time
+            }
         
         except Exception as e:
             print(f"Single exercise generation failed: {e}")
             return None
     
-    def build_prompt(self, text: str, config: Dict) -> str:
+    def build_prompt(self, text: str, config: Dict, candidates: Optional[List[Dict]] = None) -> str:
         """Build AI prompt"""
         language = config.get('language', 'English')
         level = config.get('level', 'B1-B2')
@@ -123,6 +175,15 @@ class AIExerciseGenerator(QObject):
         # Adjust prompt based on language
         language_info = self._get_language_info(language)
         
+        # Optional candidates from spaCy to constrain AI choice
+        candidates_txt = ""
+        if candidates:
+            try:
+                items = ", ".join([f"{{\"position\": {c['position']}, \"word\": \"{c['word']}\"}}" for c in candidates])
+                candidates_txt = f"\n\nBlank candidates (use exactly these): [ {items} ]\n"
+            except Exception:
+                candidates_txt = ""
+
         prompt = f"""You are a professional {language_info['name']} learning assistant. Please create listening fill-in-the-blank exercises for the following {language_info['name']} sentence.
 
 Sentence: "{text}"
@@ -132,6 +193,7 @@ Requirements:
 2. Learner level: {level} ({language_info['level_desc']})
 3. Focus blank types: {', '.join(focus_areas)}
 4. Blank density: approximately {blank_density}% (suggested {suggested_blanks} blanks)
+{candidates_txt}
 
 Blank principles:
 - Choose vocabulary that is challenging but not too difficult for {language_info['name']} learners at this level
@@ -229,7 +291,7 @@ Return only JSON, no other text."""
         
         return language_configs.get(language, language_configs['English'])
     
-    def build_batch_prompt(self, batch_subtitles: List, config: Dict) -> str:
+    def build_batch_prompt(self, batch_subtitles: List, config: Dict, batch_candidates: Optional[List[List[Dict]]] = None) -> str:
         """Build batch AI prompt"""
         language = config.get('language', 'English')
         level = config.get('level', 'B1-B2')
@@ -239,10 +301,17 @@ Return only JSON, no other text."""
         # Adjust prompt based on language
         language_info = self._get_language_info(language)
         
-        # Build batch sentence list
+        # Build batch sentence list (+ optional candidates per sentence)
         sentences_text = ""
         for i, subtitle in enumerate(batch_subtitles):
-            sentences_text += f"{i+1}. \"{subtitle.text}\"\n"
+            sentences_text += f"{i+1}. \"{subtitle.text}\""
+            if batch_candidates and i < len(batch_candidates) and batch_candidates[i]:
+                try:
+                    items = ", ".join([f"{{\"position\": {c['position']}, \"word\": \"{c['word']}\"}}" for c in batch_candidates[i]])
+                    sentences_text += f"\n   candidates: [ {items} ]"
+                except Exception:
+                    pass
+            sentences_text += "\n"
         
         prompt = f"""Create listening fill-in-the-blank exercises for the following {len(batch_subtitles)} {language_info['name']} sentences.
 
@@ -257,6 +326,7 @@ Requirements:
 - Hints in Chinese, include part-of-speech and first letter
 
 Important: Please return standard compact JSON format, do not insert line breaks or special characters in JSON strings.
+If candidates are provided for a sentence, use exactly those positions and words for blanks.
 
 Return format example:
 {{"exercises": [{{"sentence_index": 1, "blanks": [{{"position": 0, "word": "example", "hint": "noun, first letter e", "difficulty": "medium"}}]}}]}}"""

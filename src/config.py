@@ -51,7 +51,23 @@ class ConfigManager:
                 "language": "English",
                 "level": "B1-B2",
                 "focus_areas": ["nouns", "verbs"],
-                "blank_density": 25
+                "blank_density": 25,
+                # spaCy integration
+                "use_spacy": True,
+                # ai | spacy | hybrid
+                "generation_mode": "hybrid",
+                # Preferred spaCy model per language (optional hints)
+                "spacy_models": {
+                    "Spanish": "es_core_news_md"
+                },
+                # spaCy(local) specific options
+                "spacy_options": {
+                    "pos": ["NOUN", "VERB", "ADJ", "ADV"],
+                    "max_blanks": 2,
+                    "exclude_stop": True,
+                    "hint_lemma": True,
+                    "prefer_entities": True
+                }
             },
             "ui": {
                 "window_width": 1200,
