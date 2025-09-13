@@ -87,3 +87,4 @@ Thumbs.db
 # 开发文档的临时文件
 *.md~
 *.bak
+data/library.json
